@@ -68,6 +68,14 @@
     "topics": {
       "hello": {
         "description": "Commands to say hello."
+      },
+      "object": {
+        "description": "description for object",
+        "subtopics": {
+          "display": {
+            "description": "description for object.display"
+          }
+        }
       }
     }
   },
