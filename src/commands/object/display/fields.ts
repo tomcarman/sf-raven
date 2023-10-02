@@ -70,7 +70,7 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
     });
 
     // Return url
-    ux.log(`\n${conn.instanceUrl}/lightning/setup/ObjectManager/${flags.sobject}/RecordTypes/view`);
+    ux.log(`\n${conn.instanceUrl}/lightning/setup/ObjectManager/${flags.sobject}/FieldsAndRelationships/view`);
 
     // Return an object to be displayed with --json
     return result as unknown as ObjectDisplayFieldsResult;
