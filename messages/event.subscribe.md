@@ -24,4 +24,7 @@ How long to subscribe for before timing out in minutes eg. 10. Default is 3 minu
 
 # examples
 
-- <%= config.bin %> <%= command.id %>
+- <%= config.bin %> <%= command.id %> --target-org dev --event /event/My_Event\_\_e
+- <%= config.bin %> <%= command.id %> --target-org dev --event /event/My_Event\_\_e --replayid 21980378
+- <%= config.bin %> <%= command.id %> --target-org dev --event /event/My_Event\_\_e --timeout 10
+- <%= config.bin %> <%= command.id %> --target-org dev --event /event/My_Event\_\_e --replayid 21980378 --timeout 10
