@@ -1,6 +1,6 @@
 # summary
 
-This command is used to show field information for a given sObject.
+Show field information for a given sObject.
 
 # description
 

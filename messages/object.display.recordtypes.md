@@ -1,6 +1,6 @@
 # summary
 
-This command is used to show RecordType information for a given sObject.
+Show RecordType information for a given sObject.
 
 # description
 

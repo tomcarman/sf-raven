@@ -1,10 +1,10 @@
 # summary
 
-Summary of a command.
+Subscribe to Platform Events.
 
 # description
 
-More information about a command. Don't repeat the summary.
+Platform Events are printed to the terminal. An optional flag can be used to relay events from a given relayid. Defaut timeout is 3 minutes, but can be extended to 30 minutes.
 
 # flags.target-org.summary
 
