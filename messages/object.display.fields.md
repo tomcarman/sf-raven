@@ -1,10 +1,10 @@
 # summary
 
-Summary of a command.
+This command is used to show field information for a given sObject.
 
 # description
 
-More information about a command. Don't repeat the summary.
+FieldDefinition metadata is queried for the given sObject. The field Labels, API names, and Type are displayed.
 
 # flags.target-org.summary
 
@@ -16,4 +16,6 @@ The API name of the sObject that you want to view fields for.
 
 # examples
 
-- <%= config.bin %> <%= command.id %>
+- <%= config.bin %> <%= command.id %> --target-org dev --sobject Account
+
+- <%= config.bin %> <%= command.id %> --target-org dev --sobject My_Custom_Object\_\_c
