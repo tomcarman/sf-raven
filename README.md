@@ -99,7 +99,7 @@ Show field information for a given sObject.
 
 ```
 USAGE
-  $ sf object display fields -o <value> -s <value> [--json]
+  $ sf raven object display fields -o <value> -s <value> [--json]
 
 FLAGS
   -o, --target-org=<value>  (required) Login username or alias for the target org.
@@ -114,9 +114,9 @@ DESCRIPTION
   FieldDefinition metadata is queried for the given sObject. The field Labels, API names, and Type are displayed.
 
 EXAMPLES
-  $ sf object display fields --target-org dev --sobject Account
+  $ sf raven object display fields --target-org dev --sobject Account
 
-  $ sf object display fields --target-org dev --sobject My_Custom_Object__c
+  $ sf raven object display fields --target-org dev --sobject My_Custom_Object__c
 
 
 OUTPUT
@@ -135,7 +135,7 @@ Show RecordType information for a given sObject.
 
 ```
 USAGE
-  $ sf object display recordtypes -o <value> -s <value> [--json]
+  $ sf raven object display recordtypes -o <value> -s <value> [--json]
 
 FLAGS
   -o, --target-org=<value>  (required) Login username or alias for the target org.
@@ -150,9 +150,9 @@ DESCRIPTION
   RecordType metadata is queried for the given sObject. The RecordType Name, DeveloperName, and Id are displayed.
 
 EXAMPLES
-  $ sf object display recordtypes --target-org dev --sobject Account
+  $ sf raven object display recordtypes --target-org dev --sobject Account
 
-  $ sf object display recordtypes --target-org dev --sobject My_Custom_Object__c
+  $ sf raven object display recordtypes --target-org dev --sobject My_Custom_Object__c
 
 
 OUTPUT
@@ -170,7 +170,7 @@ Subscribe to Platform Events.
 
 ```
 USAGE
-  $ sf event subscribe -o <value> -e <value> [--json] [-r <value>] [-t <value>]
+  $ sf raven event subscribe -o <value> -e <value> [--json] [-r <value>] [-t <value>]
 
 FLAGS
   -e, --event=<value>       (required) The name of the Platform Event that you want to subscribe with '/event/' prefix eg. /event/My_Event__e.
@@ -187,13 +187,13 @@ DESCRIPTION
   Platform Events are printed to the terminal. An optional flag can be used to relay events from a given relayid. Defaut timeout is 3 minutes, but can be extended to 30 minutes.
 
 EXAMPLES
-  $ sf event subscribe --target-org dev --event /event/My_Event__e
+  $ sf raven event subscribe --target-org dev --event /event/My_Event__e
 
-  $ sf event subscribe --target-org dev --event /event/My_Event__e --replayid 21980378
+  $ sf raven event subscribe --target-org dev --event /event/My_Event__e --replayid 21980378
 
-  $ sf event subscribe --target-org dev --event /event/My_Event__e --timeout 10
+  $ sf raven event subscribe --target-org dev --event /event/My_Event__e --timeout 10
 
-  $ sf event subscribe --target-org dev --event /event/My_Event__e --replayid 21980378 --timeout 10
+  $ sf raven event subscribe --target-org dev --event /event/My_Event__e --replayid 21980378 --timeout 10
 
 
 OUTPUT
