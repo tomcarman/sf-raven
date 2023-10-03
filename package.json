@@ -8,8 +8,10 @@
     "@salesforce/kit": "^3.0.8",
     "@salesforce/sf-plugins-core": "^3.1.14",
     "node-emoji": "^2.1.0",
+    "pinst": "^3.0.0",
     "tslib": "^2"
   },
+  "private": false,
   "devDependencies": {
     "@salesforce/cli-plugins-testkit": "^4.3.0",
     "@salesforce/dev-config": "^4.0.1",
@@ -93,8 +95,8 @@
     "format": "wireit",
     "lint": "wireit",
     "postinstall": "yarn husky install",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "prepack": "sf-prepack",
+    "postpack": "pinst --enable && shx rm -f oclif.manifest.json",
+    "prepack": "pinst --disable && sf-prepack",
     "test": "wireit",
     "test:nuts": "nyc mocha \"**/*.nut.ts\" --slow 4500 --timeout 600000 --parallel",
     "test:only": "wireit",
