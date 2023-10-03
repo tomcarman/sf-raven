@@ -6,7 +6,7 @@
     "@oclif/core": "^2.11.8",
     "@salesforce/core": "^5.2.10",
     "@salesforce/kit": "^3.0.8",
-    "@salesforce/sf-plugins-core": "^3.1.14",
+    "@salesforce/sf-plugins-core": "^3.1.28",
     "dayjs": "^1.11.10",
     "node-emoji": "^2.1.0",
     "pinst": "^3.0.0",
