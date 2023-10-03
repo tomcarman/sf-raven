@@ -12,8 +12,7 @@ A plugin for the Salesforce CLI built by Tom Carman.
 
 - Built on [sf not sfdx](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_move_to_sf_v2.htm).
 - Uses the latest version of [oclif](https://oclif.io/blog/2022/01/12/announcing-oclif-v2/).
-- Commands now follow the [sf command structure](https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure) guidelines - `<topic> <action> <resource | sub-action> [flags]`.
-  - For example:
+- Commands now follow the [sf command structure](https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure) guidelines - `<topic> <action> <resource | sub-action> [flags]`. For example:
   - `info:fields` becomes `object display fields`
   - `utils:event:listen` becomes `event subscribe`.
 - Code now meets ESlint rules for TypeScript, including the Salesforce CLI Plugin custom rules.
