@@ -164,6 +164,46 @@ Person Account      PersonAccount           0124J000000YYYYDEF
 ...
 ```
 
+## sf raven audit display
+
+Show recent entries in the Setup Audit Trail.
+
+```
+USAGE
+  $ sf raven audit display -o <value> [--json] [-u <value>] [-l <value>]
+
+FLAGS
+  -l, --limit=<value>       [default: 20] The number of audit trail entries to return. Maximum is 2000.
+  -o, --target-org=<value>  (required) Login username or alias for the target org.
+  -u, --username=<value>    Username to filter the audit trail by.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Show recent entries in the Setup Audit Trail.
+
+  Returns the 20 most recent Setup Audit Trail entries, but this can be increased up to 2000 using the optional --limit flag. The results can be filtered by a particular user using the --username flag.
+
+EXAMPLES
+  $ sf raven audit display --target-org dev
+
+  $ sf raven audit display --target-org dev --limit 200
+
+  $ sf raven audit display --target-org dev --username username@salesforce.com.dev
+
+  $ sf raven audit display --target-org dev --limit 50 --username username@salesforce.com.dev
+
+
+OUTPUT
+
+Date                Username      Type         Action                                                      Delegate User
+─────────────────── ───────────── ──────────── ─────────────────────────────────────────────────────────── ────────────────────
+2023-09-29 17:23:47 user@dev.com  Apex Trigger Changed Account Created Trigger code: AccountTrigger        null
+2023-09-29 17:23:43 user@dev.com  Apex Trigger Created Account Created Trigger code: AccountCreatedTrigger null
+...
+```
+
 ## sf raven event subscribe
 
 Subscribe to Platform Events.
