@@ -2,20 +2,22 @@
 
 A plugin for the Salesforce CLI built by Tom Carman.
 
-sf-raven has been ported from [sfdx-raven](https://github.com/tomcarman/sfdx-raven/).
+[sf-raven](https://github.com/tomcarman/sf-raven) now replaces [sfdx-raven](https://github.com/tomcarman/sfdx-raven/).
+
+## Why a new plugin?
 
 [sfdx-raven](https://github.com/tomcarman/sfdx-raven/) was originally built in 2020, but the Salesforce CLI landscape has changed a lot since then. Rather than attempting to [migrate the original plugin from sfdx to sf](https://github.com/salesforcecli/cli/wiki/Migrate-Plugins-Built-for-sfdx), it felt cleaner to start a new project and leverage the new architecture and scaffolding tools that come with the new sf cli.
 
 ## Improvements over sfdx-raven
 
 - Built on [sf not sfdx](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_move_to_sf_v2.htm).
-- Newer version of oclif[https://oclif.io/blog/2022/01/12/announcing-oclif-v2/].
+- Uses the latest version of [oclif](https://oclif.io/blog/2022/01/12/announcing-oclif-v2/).
 - Commands now follow the [sf command structure](https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure) guidelines - `<topic> <action> <resource | sub-action> [flags]`.
-  - Eg. "info:fields" has now become "object display fields", "utils:event:listen" has now become "event subscribe".
+  - Eg. `info:fields` has become `object display fields`, `utils:event:listen` has become `event subscribe`.
 - Code now meets ESlint rules for TypeScript, including the Salesforce CLI Plugin custom rules.
 - The [Salesforce tooling / documentation](https://github.com/salesforcecli/cli/wiki/Code-Your-Plugin) for building custom plugins has matured a lot over the past couple years, which will make it easier to update the plugin going forward.
 
-More commands will be ported/added over time. See [Todo](#Todo) for whats likely coming next.
+More commands will be ported/added over time. See [Todo](#Todo).
 
 ## Command Quick Reference
 
@@ -74,7 +76,7 @@ Note: You'll be prompted that this is not officially code-signed by Salesforce -
 
 ## Todo
 
-- Migrate remaining commands from [sfdx-raven]https://github.com/tomcarman/sfdx-raven/
+- Migrate remaining commands from [sfdx-raven](https://github.com/tomcarman/sfdx-raven/)
   - sfdx raven:utils:deploy:branch2org
   - sfdx raven:utils:diff
   - sfdx raven:utils:dashboarduser:update - tbc
