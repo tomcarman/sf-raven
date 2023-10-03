@@ -2,7 +2,7 @@ import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages, StreamingClient } from '@salesforce/core';
 import { JsonMap } from '@salesforce/ts-types';
 import { Duration } from '@salesforce/kit/lib';
-import emoji = require('node-emoji');
+import * as emoji from 'node-emoji';
 
 Messages.importMessagesDirectory(__dirname);
 const messages = Messages.loadMessages('sf-raven', 'event.subscribe');
