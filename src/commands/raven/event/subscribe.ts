@@ -5,7 +5,7 @@ import { Duration } from '@salesforce/kit/lib';
 import * as emoji from 'node-emoji';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-raven', 'event.subscribe');
+const messages = Messages.loadMessages('sf-raven', 'raven.event.subscribe');
 
 export type EventSubscribeResult = {
   status: string;

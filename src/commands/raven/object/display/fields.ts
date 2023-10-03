@@ -1,8 +1,8 @@
-import { Ux, SfCommand, Flags } from '@salesforce/sf-plugins-core';
+import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-raven', 'object.display.fields');
+const messages = Messages.loadMessages('sf-raven', 'raven.object.display.fields');
 
 export type ObjectDisplayFieldsResult = {
   result: object;
@@ -29,19 +29,19 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
   public async run(): Promise<ObjectDisplayFieldsResult> {
     this.spinner.start('Loading...');
 
-    interface QueryResult {
+    type QueryResult = {
       totalSize: number;
       done: boolean;
       records: Record[];
-    }
+    };
 
-    interface Record {
+    type Record = {
       [key: string]: string | object;
       attributes: object;
       Label: string;
       QualifiedApiName: string;
       DataType: string;
-    }
+    };
 
     const { flags } = await this.parse(ObjectDisplayFields);
     const ux = new Ux({ jsonEnabled: this.jsonEnabled() });

@@ -2,7 +2,7 @@ import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages('sf-raven', 'object.display.recordtypes');
+const messages = Messages.loadMessages('sf-raven', 'raven.object.display.recordtypes');
 
 export type ObjectDisplayRecordtypesResult = {
   result: object;
@@ -29,19 +29,19 @@ export default class ObjectDisplayRecordtypes extends SfCommand<ObjectDisplayRec
   public async run(): Promise<ObjectDisplayRecordtypesResult> {
     this.spinner.start('Loading...');
 
-    interface QueryResult {
+    type QueryResult = {
       totalSize: number;
       done: boolean;
       records: Record[];
-    }
+    };
 
-    interface Record {
+    type Record = {
       [key: string]: string | object;
       attributes: object;
       Id: string;
       Name: string;
       DeveloperName: string;
-    }
+    };
 
     const { flags } = await this.parse(ObjectDisplayRecordtypes);
     const ux = new Ux({ jsonEnabled: this.jsonEnabled() });
