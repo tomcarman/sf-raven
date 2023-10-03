@@ -70,19 +70,42 @@
       "@oclif/plugin-help"
     ],
     "topics": {
-      "hello": {
-        "description": "Commands to say hello."
-      },
-      "object": {
-        "description": "description for object",
+      "raven": {
+        "description": "Various useful commands.",
         "subtopics": {
-          "display": {
-            "description": "description for object.display"
+          "audit": {
+            "description": "Commands relating to the Setup Audit Trail.",
+            "subtopics": {
+              "display": {
+                "description": "Show recent entries in the Setup Audit Trail."
+              }
+            }
+          },
+          "event": {
+            "description": "Commands relating to Platform Events.",
+            "subtopics": {
+              "subscribe": {
+                "description": "Subscribe to Platform Events."
+              }
+            }
+          },
+          "object": {
+            "description": "Commands relating to sObjects",
+            "subtopics": {
+              "display": {
+                "description": "Commands that display information about sObjects",
+                "subtopics": {
+                  "fields": {
+                    "description": "Show field information for a given sObject."
+                  },
+                  "recordtypes": {
+                    "description": "Show Record Type information for a given sObject."
+                  }
+                }
+              }
+            }
           }
         }
-      },
-      "event": {
-        "description": "description for event"
       }
     }
   },
