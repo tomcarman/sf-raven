@@ -31,6 +31,11 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 - [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
   - Show RecordType information for a given sObject.
 
+#### sf raven audit display
+
+- [sf raven audit display](#sf-raven-audit-display)
+  - Show recent entries in the Setup Audit Trail.
+
 #### sf raven event
 
 - [sf raven event subscribe](#sf-raven-event-subscribe)
@@ -87,8 +92,9 @@ The plugin can be updated to the latest version using
   - sfdx raven:utils:deploy:branch2org
   - sfdx raven:utils:diff
   - sfdx raven:utils:dashboarduser:update - tbc
-- Audit Trail inspector
-  - Allow you to quickly search audit trail by username, metadata item, most recent 50 etc.
+- sf raven audit display
+  - add functionality to exclude a user
+  - add functionality to filter by Type
 - Get the sObject Type for a given Id
 - Get the picklist values for a given picklist
 - Clone a record
