@@ -2,18 +2,18 @@
 
 A plugin for the Salesforce CLI built by Tom Carman.
 
-sf-raven has been ported from [sfdx-raven]https://github.com/tomcarman/sfdx-raven/.
+sf-raven has been ported from [sfdx-raven](https://github.com/tomcarman/sfdx-raven/).
 
-[sfdx-raven]https://github.com/tomcarman/sfdx-raven/ was originally built in 2020, but the Salesforce CLI landscape has changed a lot since then. Rather than attempting to [migrate the original plugin from sfdx to sf]https://github.com/salesforcecli/cli/wiki/Migrate-Plugins-Built-for-sfdx, it felt cleaner to start a new project and leverage the new architecture and scaffolding tools that come with the new sf cli.
+[sfdx-raven](https://github.com/tomcarman/sfdx-raven/) was originally built in 2020, but the Salesforce CLI landscape has changed a lot since then. Rather than attempting to [migrate the original plugin from sfdx to sf](https://github.com/salesforcecli/cli/wiki/Migrate-Plugins-Built-for-sfdx), it felt cleaner to start a new project and leverage the new architecture and scaffolding tools that come with the new sf cli.
 
 ## Improvements over sfdx-raven
 
-- Built on [sf not sfdx]https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_move_to_sf_v2.htm.
+- Built on [sf not sfdx](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_move_to_sf_v2.htm).
 - Newer version of oclif[https://oclif.io/blog/2022/01/12/announcing-oclif-v2/].
-- Commands now follow the [sf command structure]https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure guidelines - `<topic> <action> <resource | sub-action> [flags]`.
+- Commands now follow the [sf command structure](https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure) guidelines - `<topic> <action> <resource | sub-action> [flags]`.
   - Eg. "info:fields" has now become "object display fields", "utils:event:listen" has now become "event subscribe".
 - Code now meets ESlint rules for TypeScript, including the Salesforce CLI Plugin custom rules.
-- The [Salesforce tooling / documentation]https://github.com/salesforcecli/cli/wiki/Code-Your-Plugin for building custom plugins has matured a lot over the past couple years, which will make it easier to update the plugin going forward.
+- The [Salesforce tooling / documentation](https://github.com/salesforcecli/cli/wiki/Code-Your-Plugin) for building custom plugins has matured a lot over the past couple years, which will make it easier to update the plugin going forward.
 
 More commands will be ported/added over time. See [Todo](#Todo) for whats likely coming next.
 
@@ -30,7 +30,7 @@ See further down for full details, usage, examples etc.
 
 #### sf raven event
 
-- [sf raven event subscribe](#sf-raven-event-subscribe
+- [sf raven event subscribe](#sf-raven-event-subscribe)
   - Subscribe to Platform Events.
 
 <!-- #### sfdx:raven:utils
