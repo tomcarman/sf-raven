@@ -5678,10 +5678,10 @@ object.values@^1.1.6:
     define-properties "^1.1.4"
     es-abstract "^1.20.4"
 
-oclif@^3.17.1:
-  version "3.17.1"
-  resolved "https://registry.npmjs.org/oclif/-/oclif-3.17.1.tgz"
-  integrity sha512-qwop0W9s5nJJ9tTdLsYXxxvGSNc9xKjXccEAGCXM+x8NmGtZ4P89FwqDY4PIG7IeV9VNpYhZKQArpZNwPGn0CQ==
+oclif@^3.17.2:
+  version "3.17.2"
+  resolved "https://registry.yarnpkg.com/oclif/-/oclif-3.17.2.tgz#f13756c9b1968047e76b99cb09db9725e96fb2f6"
+  integrity sha512-+vFXxgmR7dGGz+g6YiqSZu2LXVkBMaS9/rhtsLGkYw45e53CW/3kBgPRnOvxcTDM3Td9JPeBD2JWxXnPKGQW3A==
   dependencies:
     "@oclif/core" "^2.11.4"
     "@oclif/plugin-help" "^5.2.14"
@@ -7236,12 +7236,7 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.5.0, tslib@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.1.tgz"
-  integrity sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==
-
-tslib@^2.6.2:
+tslib@^2, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.5.0, tslib@^2.6.1, tslib@^2.6.2:
   version "2.6.2"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
