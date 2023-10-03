@@ -14,15 +14,15 @@ A plugin for the Salesforce CLI built by Tom Carman.
 - Uses the latest version of [oclif](https://oclif.io/blog/2022/01/12/announcing-oclif-v2/).
 - Commands now follow the [sf command structure](https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure) guidelines - `<topic> <action> <resource | sub-action> [flags]`. For example:
   - `info:fields` becomes `object display fields`
-  - `utils:event:listen` becomes `event subscribe`.
+  - `utils:event:listen` becomes `event subscribe`
 - Code now meets ESlint rules for TypeScript, including the Salesforce CLI Plugin custom rules.
 - The [Salesforce tooling / documentation](https://github.com/salesforcecli/cli/wiki/Code-Your-Plugin) for building custom plugins has matured a lot over the past couple years, which will make it easier to update the plugin going forward.
 
-More commands will be ported/added over time. See [Todo](#Todo).
+More commands will be ported/added over time - see [Todo](#Todo).
 
 ## Command Quick Reference
 
-See further down for full details, usage, examples etc.
+Full details, usage, examples etc are further down, or can be accessed via `--help` on the commands.
 
 #### sf raven object display
 
@@ -50,9 +50,15 @@ See further down for full details, usage, examples etc.
 
 Assuming you already have the [SDFX CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) installed, just run:
 
-`sfdx plugins:install sf-raven`
+`sf plugins install sf-raven`
 
 Note: You'll be prompted that this is not officially code-signed by Salesforce - like any custom plugin. You can just accept this when prompted, or alternatively you can [whitelist it](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_allowlist.htm)
+
+### Updating the plugin
+
+The plugin can be updated to the latest version using
+
+`sf plugins update`
 
 ### Install from source
 
