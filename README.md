@@ -94,9 +94,6 @@ The plugin can be updated to the latest version using
   - sfdx raven:utils:deploy:branch2org
   - sfdx raven:utils:diff
   - sfdx raven:utils:dashboarduser:update - tbc
-- sf raven audit display
-  - add functionality to exclude a user
-  - add functionality to filter by Type
 - Get the sObject Type for a given Id
 - Get the picklist values for a given picklist
 - Clone a record
