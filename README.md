@@ -8,7 +8,7 @@ A plugin for the Salesforce CLI built by Tom Carman.
 
 ## Why a new plugin?
 
-[sfdx-raven](https://github.com/tomcarman/sfdx-raven/) was originally built in 2020, but the Salesforce CLI landscape has changed a lot since then. Rather than attempting to [migrate the original plugin from sfdx to sf](https://github.com/salesforcecli/cli/wiki/Migrate-Plugins-Built-for-sfdx), it felt cleaner to start a new project and leverage the new architecture and scaffolding tools that come with the new sf cli.
+I originally built [sfdx-raven](https://github.com/tomcarman/sfdx-raven/) in 2020, but the Salesforce CLI landscape has changed a lot since then. Rather than attempting to [migrate the original plugin from sfdx to sf](https://github.com/salesforcecli/cli/wiki/Migrate-Plugins-Built-for-sfdx), it felt cleaner to start a new project and leverage the new architecture and scaffolding tools that come with the new sf cli.
 
 ## Improvements over sfdx-raven
 
