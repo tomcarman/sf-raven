@@ -51,7 +51,7 @@
     "/messages",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/tomcarman/sfdx-raven",
+  "homepage": "https://github.com/tomcarman/sf-raven",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tomcarman/sf-raven.git"
