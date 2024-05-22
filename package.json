@@ -51,6 +51,11 @@
     "/messages",
     "/oclif.manifest.json"
   ],
+  "homepage": "https://github.com/tomcarman/sfdx-raven",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomcarman/sf-raven.git"
+  },
   "keywords": [
     "force",
     "salesforce",
