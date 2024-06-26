@@ -55,7 +55,7 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 
 ### Quick Install
 
-Assuming you already have the [SDFX CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm) installed, just run:
+Assuming you already have the [sf cli](https://developer.salesforce.com/tools/salesforcecli) installed, the plugin can be installed by running:
 
 `sf plugins install sf-raven`
 
