@@ -51,12 +51,12 @@ export default class RavenQuery extends SfCommand<RavenQueryResult> {
       max: 50000,
       default: 20,
     }),
+    // sort: Flags.option({
+    //   summary: messages.getMessage('flags.sort.summary'),
+    //   options: ['asc', 'desc'] as const,
+    // }),
     'target-org': Flags.requiredOrg(),
     'api-version': Flags.orgApiVersion(),
-    sort: Flags.option({
-      summary: messages.getMessage('flags.sort.summary'),
-      options: ['asc', 'desc'] as const,
-    })(),
   };
 
   public async run(): Promise<RavenQueryResult> {
