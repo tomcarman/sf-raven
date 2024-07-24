@@ -1,10 +1,10 @@
 import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages, StreamingClient } from '@salesforce/core';
 import { JsonMap } from '@salesforce/ts-types';
-import { Duration } from '@salesforce/kit/lib';
+import { Duration } from '@salesforce/kit';
 import * as emoji from 'node-emoji';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-raven', 'raven.event.subscribe');
 
 export type EventSubscribeResult = {

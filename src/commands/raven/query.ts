@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import { SfCommand, Flags } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-raven', 'raven.query');
 
 export type RavenQueryResult = {
@@ -48,13 +48,13 @@ export default class RavenQuery extends SfCommand<RavenQueryResult> {
       summary: messages.getMessage('flags.limit.summary'),
       char: 'l',
       min: 1,
-      max: 50000,
+      max: 50_000,
       default: 20,
     }),
-    // sort: Flags.option({
-    //   summary: messages.getMessage('flags.sort.summary'),
-    //   options: ['asc', 'desc'] as const,
-    // }),
+    sort: Flags.option({
+      summary: messages.getMessage('flags.sort.summary'),
+      options: ['asc', 'desc'] as const,
+    })(),
     'target-org': Flags.requiredOrg(),
     'api-version': Flags.orgApiVersion(),
   };
@@ -63,15 +63,15 @@ export default class RavenQuery extends SfCommand<RavenQueryResult> {
     const { flags } = await this.parse(RavenQuery);
 
     // Id files
-    if (flags.ids) {
-      const data = fs.readFileSync(flags.ids, 'utf8');
+    if (flags['ids']) {
+      const data = fs.readFileSync(flags['ids'], 'utf8');
       const ids: string[] = data.split('\n').filter((id) => id.length > 0);
 
       if (ids.length === 0) {
         throw new Error('No IDs found in file');
       }
 
-      const limit = flags.limit || 800;
+      const limit = flags['limit'] || 800;
 
       const chunks: string[][] = [];
       if (ids.length > limit) {
@@ -84,33 +84,37 @@ export default class RavenQuery extends SfCommand<RavenQueryResult> {
       }
     }
 
+    // const org: typeof requiredOrgFlagWithDeprecations = flags['target-org'];
+    // const apiVersion: typeof orgApiVersionFlagWithDeprecations = flags['api-version'];
+
     const org = flags['target-org'];
+    const apiVersion = flags['api-version'];
+
     if (org === undefined) {
       throw new Error('org is undefined');
     }
 
-    const apiVersion = flags['api-version'];
-    const conn = org.getConnection(apiVersion);
-
     let query = '';
 
-    if (flags.count) {
-      query = `SELECT COUNT() FROM ${flags.sobject}`;
+    if (flags['count']) {
+      query = `SELECT COUNT() FROM ${flags['sobject']}`;
     } else {
-      query = `SELECT ${flags.fields} FROM ${flags.sobject}`;
+      query = `SELECT ${flags['fields']} FROM ${flags['sobject']}`;
 
-      if (flags.where) {
-        query += ` WHERE ${flags.where}`;
+      if (flags['where']) {
+        query += ` WHERE ${flags['where']}`;
       }
 
-      if (flags.recent) {
+      if (flags['recent']) {
         query += ' ORDER BY CreatedDate DESC';
       }
 
-      query += ` LIMIT ${flags.limit}`;
+      query += ` LIMIT ${flags['limit']}`;
     }
 
-    const result = await conn.query(query);
+    const connection = org.getConnection(apiVersion);
+
+    const result = await connection.query(query);
     const records = result.records;
 
     console.log(records);
