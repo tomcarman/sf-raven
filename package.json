@@ -3,54 +3,38 @@
   "description": "A custom sf plugin built by @tomcarman",
   "version": "1.0.7",
   "dependencies": {
-    "@oclif/core": "^2.11.8",
-    "@salesforce/core": "^5.2.10",
-    "@salesforce/kit": "^3.0.8",
-    "@salesforce/sf-plugins-core": "^3.1.14",
+    "@oclif/core": "^4.0.14",
+    "@salesforce/core": "^8.2.3",
+    "@salesforce/kit": "^3.1.6",
+    "@salesforce/sf-plugins-core": "^11.2.1",
+    "@salesforce/ts-types": "^2.0.10",
     "dayjs": "^1.11.10",
     "jsforce": "^3.3.1",
-    "node-emoji": "^2.1.0",
-    "pinst": "^3.0.0",
-    "tslib": "^2"
+    "node-emoji": "^2.1.3",
+    "pinst": "^3.0.0"
   },
   "private": false,
   "devDependencies": {
-    "@salesforce/cli-plugins-testkit": "^4.3.0",
-    "@salesforce/dev-config": "^4.0.1",
-    "@salesforce/dev-scripts": "^5.7.0",
-    "@salesforce/prettier-config": "^0.0.3",
-    "@salesforce/ts-sinon": "^1.4.14",
-    "@swc/core": "^1.3.19",
-    "@types/inquirer": "^9.0.3",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "chai": "^4.3.6",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-salesforce": "^2.0.2",
-    "eslint-config-salesforce-typescript": "^1.1.2",
-    "eslint-plugin-import": "2.28.1",
-    "eslint-plugin-jsdoc": "^46.4.6",
-    "eslint-plugin-sf-plugin": "^1.16.2",
-    "husky": "^7.0.4",
-    "mocha": "^9.2.2",
-    "nyc": "^15.1.0",
-    "oclif": "^3.17.1",
-    "prettier": "^2.8.8",
-    "pretty-quick": "^3.1.3",
+    "@oclif/plugin-command-snapshot": "^5.2.3",
+    "@salesforce/cli-plugins-testkit": "^5.3.19",
+    "@salesforce/dev-scripts": "^10.2.4",
+    "@types/js-yaml": "^4.0.9",
+    "eslint-plugin-sf-plugin": "^1.19.1",
+    "husky": "^9.1.1",
+    "oclif": "^4.14.9",
     "shx": "0.3.4",
-    "sinon": "10.0.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.1.6",
-    "wireit": "^0.10.0"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "wireit": "^0.14.5"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "/lib",
     "/messages",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "/oclif.lock"
   ],
   "homepage": "https://github.com/tomcarman/sf-raven",
   "repository": {
@@ -67,7 +51,12 @@
     "sf"
   ],
   "license": "BSD-3-Clause",
-  "main": "lib/index.js",
+  "exports": "./lib/index.js",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "sf-raven": "bin/dev.js"
+  },
   "oclif": {
     "commands": "./lib/commands",
     "bin": "sf",

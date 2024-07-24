@@ -1,8 +1,8 @@
 import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
-Messages.importMessagesDirectory(__dirname);
+Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-raven', 'raven.audit.display');
 
 export type AuditDisplayResult = {
