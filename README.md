@@ -190,7 +190,7 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  Refresh local Salesforce metadata from an authenticated org. Without --all, local metadata paths are loaded into fzf so you can choose a specific file or directory to retrieve. With --all, each package directory from sfdx-project.json is retrieved.
+  Refresh local Salesforce metadata from an authenticated org. Without --all, local metadata paths are loaded into fzf so you can choose one or more files or directories to retrieve. Press Tab to select multiple paths, then Enter to retrieve them together. With --all, each package directory from sfdx-project.json is retrieved.
 
 EXAMPLES
   $ sf raven pull
