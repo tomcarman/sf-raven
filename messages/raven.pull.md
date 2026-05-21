@@ -36,6 +36,10 @@ Retrieve all local package directories instead of selecting a path with fzf.
 
 Retrieving source: %s
 
+# info.noSelection
+
+No local metadata was selected.
+
 # error.noMetadataPaths
 
 No local metadata paths were found to retrieve.
