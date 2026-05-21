@@ -46,7 +46,9 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 #### sf raven pull
 
 - [sf raven pull](#sf-raven-pull)
-  - Pull Salesforce metadata into the local project.
+  - Pull local Salesforce metadata paths into the project.
+- [sf raven pull remote](#sf-raven-pull-remote)
+  - Pull Salesforce metadata that exists in the org but not locally.
 
 <!-- #### sfdx:raven:utils
 * [sfdx raven:utils:deploy:branch2org](#sfdx-ravenutilsdeploybranch2org)
@@ -200,6 +202,29 @@ EXAMPLES
   $ sf raven pull --all
 
   $ sf raven pull --target-org dev --all
+```
+
+## sf raven pull remote
+
+Pull Salesforce metadata that exists in the org but not locally.
+
+```
+USAGE
+  $ sf raven pull remote [--json] [-o <value>]
+
+FLAGS
+  -o, --target-org=<value>  Login username or alias for the target org. Uses the default org when omitted.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  List supported metadata components that exist in the target org but are not present in the local project. Org-only components are prefixed with a cloud marker in fzf. Press Tab to select multiple components, then Enter to retrieve them.
+
+EXAMPLES
+  $ sf raven pull remote
+
+  $ sf raven pull remote --target-org dev
 ```
 
 ## sf raven audit display
