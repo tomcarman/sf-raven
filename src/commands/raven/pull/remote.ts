@@ -28,7 +28,16 @@ export default class RavenPullRemote extends SfCommand<RavenPullRemoteResult> {
   public async run(): Promise<RavenPullRemoteResult> {
     const { flags } = await this.parse(RavenPullRemote);
     const ux = new Ux({ jsonEnabled: this.jsonEnabled() });
-    const orgOnlyMetadata = await getOrgOnlyMetadataNames(process.cwd(), flags['target-org']);
+
+    ux.spinner.start(messages.getMessage('info.loadingRemoteMetadata'));
+
+    let orgOnlyMetadata: string[];
+
+    try {
+      orgOnlyMetadata = await getOrgOnlyMetadataNames(process.cwd(), flags['target-org']);
+    } finally {
+      ux.spinner.stop();
+    }
 
     if (orgOnlyMetadata.length === 0) {
       throw messages.createError('error.noRemoteMetadata');
