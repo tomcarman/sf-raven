@@ -1,6 +1,6 @@
 import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages, StreamingClient } from '@salesforce/core';
-import { JsonMap } from '@salesforce/ts-types';
+import type { JsonMap } from '@salesforce/ts-types';
 import { Duration } from '@salesforce/kit';
 import * as emoji from 'node-emoji';
 
