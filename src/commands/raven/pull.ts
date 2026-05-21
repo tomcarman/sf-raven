@@ -47,7 +47,7 @@ export default class RavenPull extends SfCommand<RavenPullResult> {
   public async run(): Promise<RavenPullResult> {
     const { flags } = await this.parse(RavenPull);
     const ux = new Ux({ jsonEnabled: this.jsonEnabled() });
-    const sourceDirs = flags.all ? getExistingPackageDirectoryPaths(process.cwd()) : [await selectSourcePath(process.cwd())];
+    const sourceDirs = flags.all ? getExistingPackageDirectoryPaths(process.cwd()) : await selectSourcePaths(process.cwd());
 
     if (sourceDirs.length === 0) {
       throw messages.createError('error.noMetadataPaths');
@@ -64,23 +64,28 @@ export default class RavenPull extends SfCommand<RavenPullResult> {
   }
 }
 
-const selectSourcePath = async (projectRoot: string): Promise<string> => {
+const selectSourcePaths = async (projectRoot: string): Promise<string[]> => {
   const metadataPaths = getMetadataPaths(projectRoot);
 
   if (metadataPaths.length === 0) {
     throw messages.createError('error.noMetadataPaths');
   }
 
-  const result = await runChildProcess('fzf', [], {
+  const result = await runChildProcess('fzf', ['--multi'], {
     input: metadataPaths.join('\n'),
     stderr: 'inherit',
   });
 
-  if (result.exitCode !== 0 || result.stdout.trim().length === 0) {
+  const selectedPaths = result.stdout
+    .split('\n')
+    .map((selectedPath) => selectedPath.trim())
+    .filter((selectedPath) => selectedPath.length > 0);
+
+  if (result.exitCode !== 0 || selectedPaths.length === 0) {
     throw messages.createError('error.noSelection');
   }
 
-  return result.stdout.trim();
+  return selectedPaths;
 };
 
 const retrieveSource = async (sourceDirs: string[], targetOrg?: string): Promise<void> => {

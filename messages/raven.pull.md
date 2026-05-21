@@ -4,15 +4,15 @@ Pull Salesforce metadata into the local project.
 
 # description
 
-Refresh local Salesforce metadata from an authenticated org. Without --all, local metadata paths are loaded into fzf so you can choose a specific file or directory to retrieve. With --all, each package directory from sfdx-project.json is retrieved.
+Refresh local Salesforce metadata from an authenticated org. Without --all, local metadata paths are loaded into fzf so you can choose one or more files or directories to retrieve. Press Tab to select multiple paths, then Enter to retrieve them together. With --all, each package directory from sfdx-project.json is retrieved.
 
 # examples
 
-Retrieve a selected local metadata path from the default org:
+Retrieve selected local metadata paths from the default org:
 
 <%= config.bin %> <%= command.id %>
 
-Retrieve a selected local metadata path from a specific org:
+Retrieve selected local metadata paths from a specific org:
 
 <%= config.bin %> <%= command.id %> --target-org dev
 
