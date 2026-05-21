@@ -20,6 +20,10 @@ Retrieve selected remote-only metadata from a specific org:
 
 Login username or alias for the target org. Uses the default org when omitted.
 
+# info.loadingRemoteMetadata
+
+Loading remote metadata...
+
 # info.retrieveStarting
 
 Retrieving remote metadata: %s
