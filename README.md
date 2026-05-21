@@ -43,6 +43,11 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 - [sf raven event subscribe](#sf-raven-event-subscribe)
   - Subscribe to Platform Events.
 
+#### sf raven pull
+
+- [sf raven pull](#sf-raven-pull)
+  - Pull Salesforce metadata into the local project.
+
 <!-- #### sfdx:raven:utils
 * [sfdx raven:utils:deploy:branch2org](#sfdx-ravenutilsdeploybranch2org)
   * Deploy a git branch to an org
@@ -167,6 +172,34 @@ Name                Developer Name          Id
 Business Account    Business_Account        0124J000000XXXXABC
 Person Account      PersonAccount           0124J000000YYYYDEF
 ...
+```
+
+## sf raven pull
+
+Pull Salesforce metadata into the local project.
+
+```
+USAGE
+  $ sf raven pull [--json] [-o <value>] [-a]
+
+FLAGS
+  -a, --all                 Retrieve all local package directories instead of selecting a path with fzf.
+  -o, --target-org=<value>  Login username or alias for the target org. Uses the default org when omitted.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Refresh local Salesforce metadata from an authenticated org. Without --all, local metadata paths are loaded into fzf so you can choose a specific file or directory to retrieve. With --all, each package directory from sfdx-project.json is retrieved.
+
+EXAMPLES
+  $ sf raven pull
+
+  $ sf raven pull --target-org dev
+
+  $ sf raven pull --all
+
+  $ sf raven pull --target-org dev --all
 ```
 
 ## sf raven audit display
