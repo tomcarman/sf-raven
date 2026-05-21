@@ -1,7 +1,7 @@
 {
   "name": "sf-raven",
   "description": "A custom sf plugin built by @tomcarman",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "dependencies": {
     "@oclif/core": "^4.0.14",
     "@salesforce/core": "^8.2.3",
