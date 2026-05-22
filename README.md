@@ -80,12 +80,15 @@ The plugin can be updated to the latest version using
 3. Install npm modules: `npm install`
 4. Link the plugin: `sfdx plugins:link .`
 
-## Compatibility
+### Compatibility
 
 - **macOS**
   - Plugin has been built on macOS and will always run on macOS
 
-## sf raven object display fields
+
+## Command Reference
+
+### sf raven object display fields
 
 Show field information for a given sObject.
 
@@ -126,7 +129,7 @@ Annual Revenue     AnnualRevenue   Currency(18, 0)
 ...
 ```
 
-## sf raven object display recordtypes
+### sf raven object display recordtypes
 
 Show RecordType information for a given sObject.
 
@@ -166,7 +169,7 @@ Person Account      PersonAccount           0124J000000YYYYDEF
 ...
 ```
 
-## sf raven pull
+### sf raven pull
 
 Update Salesforce metadata into the local project via a fuzzy finder.
 
@@ -194,7 +197,7 @@ EXAMPLES
   $ sf raven pull --target-org dev --all
 ```
 
-## sf raven pull remote
+### sf raven pull remote
 
 Retrieve Salesforce metadata that exists in the org but not locally, via a fuzzy finder.
 
@@ -217,7 +220,7 @@ EXAMPLES
   $ sf raven pull remote --target-org dev
 ```
 
-## sf raven deploy cancel
+### sf raven deploy cancel
 
 Cancel a pending or in-progress Salesforce deploy.
 
@@ -240,7 +243,7 @@ EXAMPLES
   $ sf raven deploy cancel --target-org dev
 ```
 
-## sf raven query ids
+### sf raven query ids
 
 Run a SOQL query against a large list of Salesforce IDs.
 
@@ -272,7 +275,7 @@ EXAMPLES
   $ sf raven query ids --file account-ids.txt --query "SELECT Id, Name FROM Account WHERE Id IN {ids}" --csv results.csv
 ```
 
-## sf raven audit display
+### sf raven audit display
 
 Show recent entries in the Setup Audit Trail.
 
@@ -312,7 +315,7 @@ Date                Username      Type         Action                           
 ...
 ```
 
-## sf raven event subscribe
+### sf raven event subscribe
 
 Subscribe to Platform Events, streamed to your terminal.
 
@@ -361,7 +364,7 @@ OUTPUT
 }
 ```
 
-<!-- ## sfdx raven:utils:deploy:branch2org
+<!-- ### sfdx raven:utils:deploy:branch2org
 
 Deploys a git branch to an org. Assumes you have git installed the neccessary access to the repo you are trying to clone (eg. you can run `git clone ...`), and that the branch is in a source-format sfdx project structure.
 
@@ -417,7 +420,7 @@ OUTPUT
 https://wise-hawk-22uzds-dev-ed.my.salesforce.com/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D0Af4K00000BHVuASAX
 ```
 
-## sfdx raven:utils:diff
+### sfdx raven:utils:diff
 
 Allows you to quickly compare metadata of files between two orgs. Intended to be used for quick compares of single
 (or possibly a few) files of the same metadata type, rather than a full org compare (there are better tools for
@@ -481,7 +484,7 @@ OUTPUT
 <img width="795" alt="diff" src="https://user-images.githubusercontent.com/1554713/111902572-057edf80-8a36-11eb-8c45-56c09c290e89.png">
 
 
-## sfdx raven:utils:dashboarduser:update
+### sfdx raven:utils:dashboarduser:update
 
 Updates the "Running User" of Dashboards from a given user, to an alternate given user. Useful for mass-updating Dashboards when a user is deactivated.
 
