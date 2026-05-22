@@ -1,12 +1,14 @@
-# sf-raven
+<div align="center">
+    <img src="media/logo/sf-raven-roundrect.png" width="300px" align="center" alt="sf raven logo" />
+    <br/><br/>
+    <b>Salesforce CLI plugin by @tomcarman</b>
+    <br/><br/>
+  
+  [![NPM](https://img.shields.io/npm/v/sf-raven.svg?label=sf-raven)](https://www.npmjs.com/package/sf-raven) [![Downloads/week](https://img.shields.io/npm/dw/sf-raven.svg)](https://npmjs.org/package/sf-raven) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/sf-raven/main/LICENSE.txt)
 
-[![NPM](https://img.shields.io/npm/v/sf-raven.svg?label=sf-raven)](https://www.npmjs.com/package/sf-raven) [![Downloads/week](https://img.shields.io/npm/dw/sf-raven.svg)](https://npmjs.org/package/sf-raven) [![License](https://img.shields.io/badge/License-BSD%203--Clause-brightgreen.svg)](https://raw.githubusercontent.com/salesforcecli/sf-raven/main/LICENSE.txt)
+</div>
 
-A plugin for the Salesforce CLI built by Tom Carman.
-
-[sf-raven](https://github.com/tomcarman/sf-raven) now replaces [sfdx-raven](https://github.com/tomcarman/sfdx-raven/).
-
-## Command Quick Reference
+## Features
 
 Full details, usage, examples etc are further down, or can be accessed via `--help` on the commands.
 
