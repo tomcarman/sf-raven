@@ -6,22 +6,6 @@ A plugin for the Salesforce CLI built by Tom Carman.
 
 [sf-raven](https://github.com/tomcarman/sf-raven) now replaces [sfdx-raven](https://github.com/tomcarman/sfdx-raven/).
 
-## Why a new plugin?
-
-I originally built [sfdx-raven](https://github.com/tomcarman/sfdx-raven/) in 2020, but the Salesforce CLI landscape has changed a lot since then. Rather than attempting to [migrate the original plugin from sfdx to sf](https://github.com/salesforcecli/cli/wiki/Migrate-Plugins-Built-for-sfdx), it felt cleaner to start a new project and leverage the new architecture and scaffolding tools that come with the new sf cli.
-
-## Improvements over sfdx-raven
-
-- Built on [sf not sfdx](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_move_to_sf_v2.htm).
-- Uses the latest version of [oclif](https://oclif.io/blog/2022/01/12/announcing-oclif-v2/).
-- Commands now follow the [sf command structure](https://github.com/salesforcecli/cli/wiki/Design-Guidelines#Command-Structure) guidelines - `<topic> <action> <resource | sub-action> [flags]`. For example:
-  - `info:fields` becomes `object display fields`
-  - `utils:event:listen` becomes `event subscribe`
-- Code now meets ESlint rules for TypeScript, including the Salesforce CLI Plugin custom rules.
-- The [Salesforce tooling / documentation](https://github.com/salesforcecli/cli/wiki/Code-Your-Plugin) for building custom plugins has matured a lot over the past couple years, which will make it easier to update the plugin going forward.
-
-More commands will be ported/added over time - see [Todo](#Todo).
-
 ## Command Quick Reference
 
 Full details, usage, examples etc are further down, or can be accessed via `--help` on the commands.
@@ -41,12 +25,12 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 #### sf raven event
 
 - [sf raven event subscribe](#sf-raven-event-subscribe)
-  - Subscribe to Platform Events.
+  - Subscribe to Platform Events, streamed to your terminal.
 
 #### sf raven deploy
 
 - [sf raven deploy cancel](#sf-raven-deploy-cancel)
-  - Cancel a pending or in-progress Salesforce deploy.
+  - Query an org for pending or in progress Salesforce deployments, and cancel them.
 
 #### sf raven query
 
@@ -56,9 +40,9 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 #### sf raven pull
 
 - [sf raven pull](#sf-raven-pull)
-  - Pull local Salesforce metadata paths into the project.
+  - Update Salesforce metadata into the local project via a fuzzy finder.
 - [sf raven pull remote](#sf-raven-pull-remote)
-  - Pull Salesforce metadata that exists in the org but not locally.
+  - Retrieve Salesforce metadata that exists in the org but not locally, via a fuzzy finder.
 
 <!-- #### sfdx:raven:utils
 * [sfdx raven:utils:deploy:branch2org](#sfdx-ravenutilsdeploybranch2org)
@@ -69,6 +53,9 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
   * Change the running user of Dashboards -->
 
 ## Setup
+
+### Dependencies
+* [fzf](https://github.com/junegunn/fzf) is required for the [sf raven pull](#sf-raven-pull) commands, and should be available on your path. (IMO they are probably the most useful commands in this plugin, so its worth setting up fzf if you don't have it.)
 
 ### Quick Install
 
@@ -95,25 +82,6 @@ The plugin can be updated to the latest version using
 
 - **macOS**
   - Plugin has been built on macOS and will always run on macOS
-
-<!-- * **Windows**
-  * Work on Windows 10 1803+ (this is that latest build I have access to)
-  * Known Issues:
-    * Emoji will not work in cmd.exe / powershell - so you may seem some funny characters when running the plugin - this can be ignored. Emoji may work in Windows Terminal, but I have not managed to test yet
-    * I don't think 'diff' is available on windows cli, so `sfdx:raven:utils:diff` is not likely to work.
-
-* **Linux**
-  * Only tested on an Ubuntu installation on [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), but should work. -->
-
-## Todo
-
-- Migrate remaining commands from [sfdx-raven](https://github.com/tomcarman/sfdx-raven/)
-  - sfdx raven:utils:deploy:branch2org
-  - sfdx raven:utils:diff
-  - sfdx raven:utils:dashboarduser:update - tbc
-- Get the sObject Type for a given Id
-- Get the picklist values for a given picklist
-- Clone a record
 
 ## sf raven object display fields
 
@@ -188,7 +156,7 @@ Person Account      PersonAccount           0124J000000YYYYDEF
 
 ## sf raven pull
 
-Pull Salesforce metadata into the local project.
+Update Salesforce metadata into the local project via a fuzzy finder.
 
 ```
 USAGE
@@ -216,7 +184,7 @@ EXAMPLES
 
 ## sf raven pull remote
 
-Pull Salesforce metadata that exists in the org but not locally.
+Retrieve Salesforce metadata that exists in the org but not locally, via a fuzzy finder.
 
 ```
 USAGE
@@ -334,7 +302,7 @@ Date                Username      Type         Action                           
 
 ## sf raven event subscribe
 
-Subscribe to Platform Events.
+Subscribe to Platform Events, streamed to your terminal.
 
 ```
 USAGE
