@@ -8,10 +8,20 @@
 
 </div>
 
+## Overview
+
 * [Features](#features)
-* [Setup](#setup)
+* [Install](#install)
 * [Command Reference](#command-reference)
   * [sf raven object display fields](#sf-raven-object-display-fields)
+  * [sf raven object display fields](#sf-raven-object-display-fields)
+  * [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
+  * [sf raven pull](#sf-raven-pull)
+  * [sf raven pull remote](#sf-raven-pull-remote)
+  * [sf raven deploy cancel](#sf-raven-deploy-cancel)
+  * [sf raven query ids](#sf-raven-query-ids)
+  * [sf raven audit display](#sf-raven-audit-display)
+  * [sf raven event subscribe](#sf-raven-event-subscribe)
 
 </br>
 
@@ -61,7 +71,7 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 * [sfdx raven:utils:dashboarduser:update](#sfdx-ravenutilsdashboarduserupdate)
   * Change the running user of Dashboards -->
 
-## Setup
+## Install
 
 ### Dependencies
 * [fzf](https://github.com/junegunn/fzf) is required for the [sf raven pull](#sf-raven-pull) commands, and should be available on your path. (IMO they are probably the most useful commands in this plugin, so its worth setting up fzf if you don't have it.)
