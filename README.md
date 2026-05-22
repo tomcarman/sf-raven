@@ -8,6 +8,13 @@
 
 </div>
 
+* [Features](#features)
+* [Setup](#setup)
+* [Command Reference](#command-reference)
+  * [sf raven object display fields](#sf-raven-object-display-fields)
+
+</br>
+
 ## Features
 
 Full details, usage, examples etc are further down, or can be accessed via `--help` on the commands.
