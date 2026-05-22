@@ -89,11 +89,12 @@ Show field information for a given sObject.
 
 ```
 USAGE
-  $ sf raven object display fields -o <value> -s <value> [--json]
+  $ sf raven object display fields -o <value> -s <value> [--json] [-c <value>]
 
 FLAGS
+  -c, --csv=<value>         Path to write field information as CSV. When supplied, table output is suppressed.
   -o, --target-org=<value>  (required) Login username or alias for the target org.
-  -s, --sobject=<value>     (required) The API name of the sObject that you want to view fields for.
+  -s, --sobject=<value>     (required) The API name of the sObject that you want to view fields for. Use a comma-delimited list to query multiple objects.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -107,6 +108,10 @@ EXAMPLES
   $ sf raven object display fields --target-org dev --sobject Account
 
   $ sf raven object display fields --target-org dev --sobject My_Custom_Object__c
+
+  $ sf raven object display fields --target-org dev --sobject Account,Contact
+
+  $ sf raven object display fields --target-org dev --sobject Account --csv account-fields.csv
 
 
 OUTPUT
@@ -125,11 +130,12 @@ Show RecordType information for a given sObject.
 
 ```
 USAGE
-  $ sf raven object display recordtypes -o <value> -s <value> [--json]
+  $ sf raven object display recordtypes -o <value> -s <value> [--json] [-c <value>]
 
 FLAGS
+  -c, --csv=<value>         Path to write Record Type information as CSV. When supplied, table output is suppressed.
   -o, --target-org=<value>  (required) Login username or alias for the target org.
-  -s, --sobject=<value>     (required) The API name of the sObject that you want to view Record Types for.
+  -s, --sobject=<value>     (required) The API name of the sObject that you want to view Record Types for. Use a comma-delimited list to query multiple objects.
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -143,6 +149,10 @@ EXAMPLES
   $ sf raven object display recordtypes --target-org dev --sobject Account
 
   $ sf raven object display recordtypes --target-org dev --sobject My_Custom_Object__c
+
+  $ sf raven object display recordtypes --target-org dev --sobject Account,Opportunity
+
+  $ sf raven object display recordtypes --target-org dev --sobject Account --csv account-record-types.csv
 
 
 OUTPUT
