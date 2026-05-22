@@ -15,7 +15,6 @@
 * [Install](#install)
 * [Command Reference](#command-reference)
   * [sf raven object display fields](#sf-raven-object-display-fields)
-  * [sf raven object display fields](#sf-raven-object-display-fields)
   * [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
   * [sf raven pull](#sf-raven-pull)
   * [sf raven pull remote](#sf-raven-pull-remote)
