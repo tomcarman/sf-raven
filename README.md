@@ -43,6 +43,11 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 - [sf raven event subscribe](#sf-raven-event-subscribe)
   - Subscribe to Platform Events.
 
+#### sf raven deploy
+
+- [sf raven deploy cancel](#sf-raven-deploy-cancel)
+  - Cancel a pending or in-progress Salesforce deploy.
+
 #### sf raven pull
 
 - [sf raven pull](#sf-raven-pull)
@@ -225,6 +230,29 @@ EXAMPLES
   $ sf raven pull remote
 
   $ sf raven pull remote --target-org dev
+```
+
+## sf raven deploy cancel
+
+Cancel a pending or in-progress Salesforce deploy.
+
+```
+USAGE
+  $ sf raven deploy cancel [--json] [-o <value>]
+
+FLAGS
+  -o, --target-org=<value>  Login username or alias for the target org. Uses the default org when omitted.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Query the target org for pending or in-progress deploy requests, select one from an interactive list, confirm the cancellation, and submit an asynchronous deploy cancel request.
+
+EXAMPLES
+  $ sf raven deploy cancel
+
+  $ sf raven deploy cancel --target-org dev
 ```
 
 ## sf raven audit display
