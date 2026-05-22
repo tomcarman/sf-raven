@@ -48,6 +48,11 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 - [sf raven deploy cancel](#sf-raven-deploy-cancel)
   - Cancel a pending or in-progress Salesforce deploy.
 
+#### sf raven query
+
+- [sf raven query ids](#sf-raven-query-ids)
+  - Run a SOQL query against a large list of Salesforce IDs.
+
 #### sf raven pull
 
 - [sf raven pull](#sf-raven-pull)
@@ -253,6 +258,38 @@ EXAMPLES
   $ sf raven deploy cancel
 
   $ sf raven deploy cancel --target-org dev
+```
+
+## sf raven query ids
+
+Run a SOQL query against a large list of Salesforce IDs.
+
+```
+USAGE
+  $ sf raven query ids -f <value> -q <value> [--json] [-o <value>] [-b <value>] [-c <value>] [-l <value>]
+
+FLAGS
+  -b, --batch-size=<value>  Number of IDs to include in each query batch. By default, batches are sized to fit Salesforce URI limits.
+  -c, --csv=<value>         Path to write query results as CSV. When supplied, table output is suppressed.
+  -f, --file=<value>        (required) Path to a file containing one Salesforce ID per row.
+  -l, --limit=<value>       Process only the first N unique valid IDs from the file.
+  -o, --target-org=<value>  Login username or alias for the target org. Uses the default org when omitted.
+  -q, --query=<value>       (required) SOQL query to run. Must include the {ids} placeholder where the ID list should be inserted.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Read Salesforce IDs from a file, deduplicate and validate them, split them into safe query batches, and run a SOQL query with the IDs inserted at the {ids} placeholder.
+
+EXAMPLES
+  $ sf raven query ids --file account-ids.txt --query "SELECT Id, Name FROM Account WHERE Id IN {ids}"
+
+  $ sf raven query ids --file account-ids.txt --query "SELECT Id, Name FROM Opportunity WHERE AccountId IN {ids}"
+
+  $ sf raven query ids --file account-ids.txt --query "SELECT Id, Name FROM Account WHERE Id IN {ids}" --limit 25
+
+  $ sf raven query ids --file account-ids.txt --query "SELECT Id, Name FROM Account WHERE Id IN {ids}" --csv results.csv
 ```
 
 ## sf raven audit display
