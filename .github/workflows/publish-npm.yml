@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,6 +20,7 @@ jobs:
           fetch-depth: 0
 
       - name: Verify tag commit is on main
+        if: github.event_name == 'push'
         run: |
           git fetch origin main
           TAG_COMMIT="$(git rev-list -n 1 "$GITHUB_REF_NAME")"
@@ -38,6 +40,14 @@ jobs:
 
       - run: yarn build
 
-      - run: npm publish --registry=https://registry.npmjs.org/ --access public --provenance
+      - name: Publish dry run
+        if: github.event_name == 'workflow_dispatch'
+        run: npm publish --dry-run --registry=https://registry.npmjs.org/ --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish
+        if: github.event_name == 'push'
+        run: npm publish --registry=https://registry.npmjs.org/ --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
