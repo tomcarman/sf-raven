@@ -1,3 +1,4 @@
+import { writeFileSync } from 'node:fs';
 import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
 
@@ -24,11 +25,13 @@ export default class ObjectDisplayRecordtypes extends SfCommand<ObjectDisplayRec
       char: 's',
       required: true,
     }),
+    csv: Flags.file({
+      summary: messages.getMessage('flags.csv.summary'),
+      char: 'c',
+    }),
   };
 
   public async run(): Promise<ObjectDisplayRecordtypesResult> {
-    this.spinner.start('Loading...');
-
     type QueryResult = {
       totalSize: number;
       done: boolean;
@@ -41,6 +44,7 @@ export default class ObjectDisplayRecordtypes extends SfCommand<ObjectDisplayRec
       Id: string;
       Name: string;
       DeveloperName: string;
+      SObjectType: string;
     };
 
     const { flags } = await this.parse(ObjectDisplayRecordtypes);
@@ -48,32 +52,128 @@ export default class ObjectDisplayRecordtypes extends SfCommand<ObjectDisplayRec
 
     const org = flags['target-org'];
     const conn = org.getConnection();
-    const query = `SELECT Name, DeveloperName, Id FROM RecordType WHERE SObjectType = '${flags.sobject}'`;
+    const sobjects = parseSobjects(flags.sobject);
+    const records: Record[] = [];
 
-    const result = (await conn.query(query)) as QueryResult;
+    this.spinner.start('Loading...');
 
-    this.spinner.stop();
+    try {
+      await sobjects.reduce(async (previousQuery, sobject) => {
+        await previousQuery;
 
-    // Return table of fields
-    ux.table(result.records, {
-      label: {
-        header: 'Name',
-        get: (row: Record) => row.Name,
-      },
-      qualifiedApiName: {
-        header: 'Developer Name',
-        get: (row: Record) => row.DeveloperName,
-      },
-      dataType: {
-        header: 'Id',
-        get: (row: Record) => row.Id,
-      },
-    });
+        const query = `SELECT SObjectType, Name, DeveloperName, Id FROM RecordType WHERE SObjectType = '${sobject}' ORDER BY DeveloperName`;
+        const queryResult = (await conn.query(query)) as QueryResult;
+        records.push(...queryResult.records.map((record) => ({ ...record, SObjectType: sobject })));
+      }, Promise.resolve());
+    } finally {
+      this.spinner.stop();
+    }
+
+    const result: QueryResult = {
+      totalSize: records.length,
+      done: true,
+      records,
+    };
+    const includeObjectColumn = sobjects.length > 1;
+
+    if (flags.csv) {
+      writeCsv(flags.csv, result.records, includeObjectColumn);
+      ux.log(messages.getMessage('info.csvWritten', [result.records.length.toString(), flags.csv]));
+    } else {
+      // Return table of fields
+      ux.table(result.records, getTableColumns(includeObjectColumn));
+    }
 
     // Return url
-    ux.log(`\n${conn.instanceUrl}/lightning/setup/ObjectManager/${flags.sobject}/RecordTypes/view`);
+    if (sobjects.length === 1) {
+      ux.log(`\n${conn.instanceUrl}/lightning/setup/ObjectManager/${sobjects[0]}/RecordTypes/view`);
+    }
 
     // Return an object to be displayed with --json
     return result as unknown as ObjectDisplayRecordtypesResult;
   }
 }
+
+const parseSobjects = (sobjectFlag: string): string[] => {
+  const sobjects = sobjectFlag
+    .split(',')
+    .map((sobject) => sobject.trim())
+    .filter((sobject) => sobject.length > 0);
+
+  return Array.from(new Set(sobjects));
+};
+
+const getTableColumns = (
+  includeObjectColumn: boolean
+): {
+  [key: string]: {
+    header: string;
+    get: (row: {
+      SObjectType: string;
+      Name: string;
+      DeveloperName: string;
+      Id: string;
+    }) => string;
+  };
+} => ({
+  ...(includeObjectColumn
+    ? {
+        object: {
+          header: 'Object',
+          get: (row) => row.SObjectType,
+        },
+      }
+    : {}),
+  label: {
+    header: 'Name',
+    get: (row) => row.Name,
+  },
+  qualifiedApiName: {
+    header: 'Developer Name',
+    get: (row) => row.DeveloperName,
+  },
+  dataType: {
+    header: 'Id',
+    get: (row) => row.Id,
+  },
+});
+
+const writeCsv = (
+  filePath: string,
+  records: Array<{
+    SObjectType: string;
+    Name: string;
+    DeveloperName: string;
+    Id: string;
+  }>,
+  includeObjectColumn: boolean
+): void => {
+  const columns = includeObjectColumn ? ['Object', 'Name', 'Developer Name', 'Id'] : ['Name', 'Developer Name', 'Id'];
+  const rows = [
+    columns.map(escapeCsvValue).join(','),
+    ...records.map((record) =>
+      (includeObjectColumn
+        ? [record.SObjectType, record.Name, record.DeveloperName, record.Id]
+        : [record.Name, record.DeveloperName, record.Id]
+      )
+        .map(escapeCsvValue)
+        .join(',')
+    ),
+  ];
+
+  writeFileSync(filePath, `${rows.join('\n')}\n`, 'utf8');
+};
+
+const escapeCsvValue = (value: unknown): string => {
+  if (value == null) {
+    return '';
+  }
+
+  const stringValue = String(value);
+
+  if (/[",\n\r]/.test(stringValue)) {
+    return `"${stringValue.replace(/"/g, '""')}"`;
+  }
+
+  return stringValue;
+};
