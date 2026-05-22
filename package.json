@@ -93,6 +93,14 @@
               }
             }
           },
+          "query": {
+            "description": "Commands relating to SOQL queries.",
+            "subtopics": {
+              "ids": {
+                "description": "Run a SOQL query against a large list of Salesforce IDs."
+              }
+            }
+          },
           "object": {
             "description": "Commands relating to sObjects",
             "subtopics": {
