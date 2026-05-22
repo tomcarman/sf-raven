@@ -36,7 +36,7 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 - [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
   - Show RecordType information for a given sObject.
 
-#### sf raven audit display
+#### sf raven audit display 
 
 - [sf raven audit display](#sf-raven-audit-display)
   - Show recent entries in the Setup Audit Trail.
