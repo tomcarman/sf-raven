@@ -35,7 +35,7 @@
         "shx": "0.3.4",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
-        "wireit": "^0.14.5"
+        "wireit": "^0.14.12"
       },
       "engines": {
         "node": ">=18.0.0"
@@ -14076,9 +14076,9 @@
       }
     },
     "node_modules/wireit": {
-      "version": "0.14.5",
-      "resolved": "https://registry.npmjs.org/wireit/-/wireit-0.14.5.tgz",
-      "integrity": "sha512-K4ka9YBpSyD6pmFZYTJd4VpPsAiPT6j/fOtLzYgnKWlPIMM7lAZjQQ30H7urO+Lqx1Wvrw88tQHBz4njy+lglg==",
+      "version": "0.14.12",
+      "resolved": "https://registry.npmjs.org/wireit/-/wireit-0.14.12.tgz",
+      "integrity": "sha512-gNSd+nZmMo6cuICezYXRIayu6TSOeCSCDzjSF0q6g8FKDsRbdqrONrSZYzdk/uBISmRcv4vZtsno6GyGvdXwGA==",
       "dev": true,
       "license": "Apache-2.0",
       "workspaces": [
