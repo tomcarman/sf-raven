@@ -29,34 +29,34 @@
 
 Full details, usage, examples etc are further down, or can be accessed via `--help` on the commands.
 
-#### sf raven object display
+**sf raven object display**
 
 - [sf raven object display fields](#sf-raven-object-display-fields)
   - Show field information for a given sObject.
 - [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
   - Show RecordType information for a given sObject.
 
-#### sf raven audit display 
+**sf raven audit display**
 
 - [sf raven audit display](#sf-raven-audit-display)
   - Show recent entries in the Setup Audit Trail.
 
-#### sf raven event
+**sf raven event**
 
 - [sf raven event subscribe](#sf-raven-event-subscribe)
   - Subscribe to Platform Events, streamed to your terminal.
 
-#### sf raven deploy
+**sf raven deploy**
 
 - [sf raven deploy cancel](#sf-raven-deploy-cancel)
   - Query an org for pending or in progress Salesforce deployments, and cancel them.
 
-#### sf raven query
+**sf raven query**
 
 - [sf raven query ids](#sf-raven-query-ids)
   - Run a SOQL query against a large list of Salesforce IDs.
 
-#### sf raven pull
+**sf raven pull**
 
 - [sf raven pull](#sf-raven-pull)
   - Update Salesforce metadata into the local project via a fuzzy finder.
