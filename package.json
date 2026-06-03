@@ -10,6 +10,7 @@
     "@salesforce/sf-plugins-core": "^11.3.12",
     "@salesforce/source-deploy-retrieve": "^12.36.1",
     "@salesforce/ts-types": "^2.0.10",
+    "chalk": "^4.1.2",
     "dayjs": "^1.11.20",
     "jsforce": "^3.3.1",
     "node-emoji": "^2.1.3",
@@ -35,12 +36,12 @@
       "glob": "12.0.0"
     },
     "wireit": {
-      "brace-expansion": "5.0.6"
+      "brace-expansion": "2.0.1"
     }
   },
   "resolutions": {
     "linkinator/glob": "12.0.0",
-    "wireit/brace-expansion": "5.0.6"
+    "wireit/brace-expansion": "2.0.1"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -88,6 +89,14 @@
             "subtopics": {
               "display": {
                 "description": "Show recent entries in the Setup Audit Trail."
+              }
+            }
+          },
+          "apex": {
+            "description": "Commands relating to Apex.",
+            "subtopics": {
+              "log": {
+                "description": "Tail Apex debug logs in real time."
               }
             }
           },

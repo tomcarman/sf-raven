@@ -25,6 +25,7 @@
   * [sf raven query ids](#sf-raven-query-ids)
   * [sf raven audit display](#sf-raven-audit-display)
   * [sf raven event subscribe](#sf-raven-event-subscribe)
+  * [sf raven apex log](#sf-raven-apex-log)
 
 </br>
 
@@ -58,6 +59,11 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 
 - [sf raven query ids](#sf-raven-query-ids)
   - Run a SOQL query against a large list of Salesforce IDs.
+
+**sf raven apex**
+
+- [sf raven apex log](#sf-raven-apex-log)
+  - Tail Apex debug logs in real time, streamed to your terminal.
 
 **sf raven pull**
 
@@ -447,6 +453,59 @@ OUTPUT
     "replayId": 21980379
   }
 }
+```
+
+### sf raven apex log
+
+Tail Apex debug logs in real time.
+
+```
+USAGE
+  $ sf raven apex log [--json] [-o <value>] [-u <value>] [-f <value>] [--raw] [--no-trace] [-t <value>]
+
+FLAGS
+  -f, --filter=<value>      Only show USER_DEBUG lines containing this string. Errors and exceptions are always shown.
+  -o, --target-org=<value>  Login username or alias for the target org. Uses the default org when omitted.
+  -t, --timeout=<value>     [default: 3] Minutes to listen before exiting (1-30).
+  -u, --user=<value>        Username to tail logs for. Defaults to the current authenticated user.
+      --no-trace            Skip trace flag check. Use when managing trace flags externally.
+      --raw                 Print the full log body instead of filtering to USER_DEBUG and exception lines.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Stream Apex debug logs as they are written. Logs are filtered to show USER_DEBUG statements and exceptions by
+  default. Use --raw to see the full log body.
+
+  If no active trace flag exists for the target user, you will be prompted to create one. Without an active trace
+  flag, no logs will be captured.
+
+EXAMPLES
+  $ sf raven apex log
+
+  $ sf raven apex log --target-org dev
+
+  $ sf raven apex log --target-org dev --user admin@myorg.com
+
+  $ sf raven apex log --target-org dev --filter MyDebugPrefix
+
+  $ sf raven apex log --target-org dev --raw
+```
+
+OUTPUT
+
+```
+Trace flag active until 09:32:17.
+Tailing logs for tom.carman@myorg.com. Press Ctrl+C to stop.
+
+── executeAnonymous  09:31:58  245ms ──
+  [1]   DEBUG    Hello world
+  [3]   DEBUG    account = Account:{Name=Acme, ...}
+
+── UserTrigger  09:32:04  18ms ──
+  [12]  DEBUG    entering trigger
+  ⚠  [47]  System.NullPointerException: Attempt to de-reference a null object
 ```
 
 <!-- ### sfdx raven:utils:deploy:branch2org
