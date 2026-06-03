@@ -3,6 +3,7 @@ import select, { Separator } from '@inquirer/select';
 import { Messages } from '@salesforce/core';
 import { Flags, SfCommand, Ux } from '@salesforce/sf-plugins-core';
 import dayjs from 'dayjs';
+import { isPromptForceCloseError } from '../../../shared/pull.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-raven', 'raven.deploy.cancel');
@@ -205,7 +206,6 @@ const getGroupedDeployChoices = (label: string, deployRequests: DeployRequestRec
         })),
       ];
 
-const isPromptForceCloseError = (error: unknown): boolean => error instanceof Error && error.message.includes('User force closed the prompt');
 
 const formatProgress = (completed?: number | null, total?: number | null, errors?: number | null): string => {
   const completedValue = completed ?? 0;

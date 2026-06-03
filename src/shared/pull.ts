@@ -88,7 +88,7 @@ export const selectItems = async (items: string[]): Promise<string[]> => {
 export const getEffectiveRemoteMetadataTypes = async (projectRoot: string): Promise<string[]> => {
   const configuredMetadataTypes = await getConfiguredRemoteMetadataTypes(projectRoot);
 
-  if (configuredMetadataTypes.length > 0) {
+  if (configuredMetadataTypes !== undefined) {
     return configuredMetadataTypes;
   }
 
@@ -123,6 +123,10 @@ export const listOrgMetadataTypes = async (targetOrg?: string): Promise<string[]
   });
 
   if (result.exitCode !== 0) {
+    return [];
+  }
+
+  if (!result.stdout.trim()) {
     return [];
   }
 
@@ -199,6 +203,10 @@ const listOrgMetadata = async (metadataType: string, targetOrg?: string): Promis
     return [];
   }
 
+  if (!result.stdout.trim()) {
+    return [];
+  }
+
   const parsedResult = JSON.parse(result.stdout) as MetadataListResult;
   const components = parsedResult.result;
 
@@ -254,7 +262,7 @@ const runChildProcess = async (
     childProcess.on('close', (code) => {
       resolve({
         stdout,
-        exitCode: code ?? 0,
+        exitCode: code ?? 1,
       });
     });
 
@@ -265,17 +273,17 @@ const runChildProcess = async (
     childProcess.stdin?.end();
   });
 
-const getConfiguredRemoteMetadataTypes = async (projectRoot: string): Promise<string[]> => {
+const getConfiguredRemoteMetadataTypes = async (projectRoot: string): Promise<string[] | undefined> => {
   const project = await resolveProject(projectRoot);
 
   if (project == null) {
-    return [];
+    return undefined;
   }
 
   const config = await getRavenPluginConfig(project);
   const metadataTypes = config.pullRemote?.metadataTypes;
 
-  return Array.isArray(metadataTypes) ? sortValues(metadataTypes.filter((metadataType): metadataType is string => typeof metadataType === 'string')) : [];
+  return Array.isArray(metadataTypes) ? sortValues(metadataTypes.filter((metadataType): metadataType is string => typeof metadataType === 'string')) : undefined;
 };
 
 const writeRemoteMetadataTypes = async (projectRoot: string, metadataTypes: string[]): Promise<void> => {
@@ -349,6 +357,9 @@ const getLocalMetadataComponents = (projectRoot: string): MetadataComponent[] =>
     .toArray()
     .filter((component) => component.type.isAddressable !== false);
 };
+
+export const isPromptForceCloseError = (error: unknown): boolean =>
+  error instanceof Error && error.name === 'ExitPromptError';
 
 const getMetadataTypeName = (metadataType: MetadataTypeDescription): string | undefined =>
   metadataType.xmlName ?? metadataType.metadataType ?? metadataType.name ?? metadataType.type;

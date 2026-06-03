@@ -1,7 +1,7 @@
 import select from '@inquirer/select';
 import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import { getEffectiveRemoteMetadataTypes, getOrgOnlyMetadataNamesForType, retrieveMetadataNames, selectItems } from '../../../shared/pull.js';
+import { getEffectiveRemoteMetadataTypes, getOrgOnlyMetadataNamesForType, isPromptForceCloseError, retrieveMetadataNames, selectItems } from '../../../shared/pull.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-raven', 'raven.pull.remote');
@@ -116,4 +116,3 @@ const selectMetadataType = async (metadataTypes: string[]): Promise<string | und
   }
 };
 
-const isPromptForceCloseError = (error: unknown): boolean => error instanceof Error && error.message.includes('User force closed the prompt');
