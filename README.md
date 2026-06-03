@@ -11,6 +11,7 @@
 
 ## Overview
 
+* [AI Disclaimer](#-ai-disclaimer)
 * [Features](#features)
 * [Install](#install)
 * [Command Reference](#command-reference)
@@ -27,7 +28,11 @@
   * [sf raven event subscribe](#sf-raven-event-subscribe)
   * [sf raven apex log](#sf-raven-apex-log)
 
-</br>
+## ✨ AI Disclaimer
+
+I started this plugin in 2020 (under it's predecessor [sfdx-raven](https://github.com/tomcarman/sfdx-raven)). It was a passion project to learn a bit of typescript development, and create solutions for problems that annoyed me as a day-to-day Salesforce Engineer. I've very slowly added commands over time, but its hard to find time to devote to tooling projects. 
+
+Now in 2026 I can use AI to generate new commands / functionality in minutes rather than hours. For me this is the perfect type of project for using AI heavily - it's a collection of tools to make my life a bit easier - aka it's not mission critical code. All that to say, since May 2026, this project is heavily using AI generated code. I barely read it. If that makes you uncomfortable, don't use it.
 
 ## Features
 
@@ -110,13 +115,12 @@ The plugin can be updated to the latest version using
 1. Install the [SDFX CLI](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm)
 2. Clone the repository: `git clone git@github.com:tomcarman/sf-raven.git`
 3. Install npm modules: `npm install`
-4. Link the plugin: `sfdx plugins:link .`
+4. Link the plugin: `sf plugins link .`
 
 ### Compatibility
 
 - **macOS**
   - Plugin has been built on macOS and will always run on macOS
-
 
 ## Command Reference
 
