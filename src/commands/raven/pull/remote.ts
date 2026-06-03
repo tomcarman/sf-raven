@@ -1,13 +1,19 @@
+import select from '@inquirer/select';
 import { SfCommand, Flags, Ux } from '@salesforce/sf-plugins-core';
 import { Messages } from '@salesforce/core';
-import { getOrgOnlyMetadataNames, retrieveMetadataNames, selectItems } from '../../../shared/pull.js';
+import { getEffectiveRemoteMetadataTypes, getOrgOnlyMetadataNamesForType, retrieveMetadataNames, selectItems } from '../../../shared/pull.js';
 
 Messages.importMessagesDirectoryFromMetaUrl(import.meta.url);
 const messages = Messages.loadMessages('sf-raven', 'raven.pull.remote');
 
 const orgOnlyPrefix = '☁  ';
 
+type SelectPrompt = <Value>(config: { message: string; choices: readonly unknown[]; pageSize?: number }) => Promise<Value>;
+
+const selectPrompt = select as unknown as SelectPrompt;
+
 export type RavenPullRemoteResult = {
+  metadataType?: string;
   metadataNames: string[];
   targetOrg?: string;
 };
@@ -28,19 +34,39 @@ export default class RavenPullRemote extends SfCommand<RavenPullRemoteResult> {
   public async run(): Promise<RavenPullRemoteResult> {
     const { flags } = await this.parse(RavenPullRemote);
     const ux = new Ux({ jsonEnabled: this.jsonEnabled() });
+    const metadataTypes = await getEffectiveRemoteMetadataTypes(process.cwd());
+
+    if (metadataTypes.length === 0) {
+      throw messages.createError('error.noMetadataTypes');
+    }
+
+    const metadataType = await selectMetadataType(metadataTypes);
+
+    if (metadataType == null) {
+      ux.log(messages.getMessage('info.noTypeSelection'));
+      return {
+        metadataNames: [],
+        targetOrg: flags['target-org'],
+      };
+    }
 
     ux.spinner.start(messages.getMessage('info.loadingRemoteMetadata'));
 
     let orgOnlyMetadata: string[];
 
     try {
-      orgOnlyMetadata = await getOrgOnlyMetadataNames(process.cwd(), flags['target-org']);
+      orgOnlyMetadata = await getOrgOnlyMetadataNamesForType(process.cwd(), metadataType, flags['target-org']);
     } finally {
       ux.spinner.stop();
     }
 
     if (orgOnlyMetadata.length === 0) {
-      throw messages.createError('error.noRemoteMetadata');
+      ux.log(messages.getMessage('info.noRemoteMetadata', [metadataType]));
+      return {
+        metadataType,
+        metadataNames: [],
+        targetOrg: flags['target-org'],
+      };
     }
 
     const selectedDisplays = await selectItems(orgOnlyMetadata.map((metadataName) => `${orgOnlyPrefix}${metadataName}`));
@@ -49,6 +75,7 @@ export default class RavenPullRemote extends SfCommand<RavenPullRemoteResult> {
     if (metadataNames.length === 0) {
       ux.log(messages.getMessage('info.noSelection'));
       return {
+        metadataType,
         metadataNames,
         targetOrg: flags['target-org'],
       };
@@ -63,8 +90,30 @@ export default class RavenPullRemote extends SfCommand<RavenPullRemoteResult> {
     }
 
     return {
+      metadataType,
       metadataNames,
       targetOrg: flags['target-org'],
     };
   }
 }
+
+const selectMetadataType = async (metadataTypes: string[]): Promise<string | undefined> => {
+  try {
+    return await selectPrompt<string>({
+      message: messages.getMessage('prompt.selectMetadataType'),
+      choices: metadataTypes.map((metadataType) => ({
+        name: metadataType,
+        value: metadataType,
+      })),
+      pageSize: 15,
+    });
+  } catch (error) {
+    if (isPromptForceCloseError(error)) {
+      return undefined;
+    }
+
+    throw error;
+  }
+};
+
+const isPromptForceCloseError = (error: unknown): boolean => error instanceof Error && error.message.includes('User force closed the prompt');

@@ -4,7 +4,7 @@ Pull Salesforce metadata that exists in the org but not locally.
 
 # description
 
-List supported metadata components that exist in the target org but are not present in the local project. Org-only components are prefixed with a cloud marker in fzf. Press Tab to select multiple components, then Enter to retrieve them.
+Select a configured metadata type, then list components of that type that exist in the target org but are not present in the local project. Org-only components are prefixed with a cloud marker in fzf. Press Tab to select multiple components, then Enter to retrieve them.
 
 # examples
 
@@ -24,6 +24,10 @@ Login username or alias for the target org. Uses the default org when omitted.
 
 Loading remote metadata...
 
+# info.noRemoteMetadata
+
+No remote-only %s metadata was found.
+
 # info.retrieveStarting
 
 Retrieving remote metadata: %s
@@ -32,9 +36,17 @@ Retrieving remote metadata: %s
 
 No remote metadata was selected.
 
-# error.noRemoteMetadata
+# info.noTypeSelection
 
-No supported remote-only metadata was found.
+No metadata type was selected.
+
+# prompt.selectMetadataType
+
+Select a metadata type to inspect.
+
+# error.noMetadataTypes
+
+No supported remote metadata types were found. Run `sf raven pull remote type add` to add types from an org.
 
 # error.noSelection
 
