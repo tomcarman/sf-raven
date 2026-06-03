@@ -1,6 +1,8 @@
 import { spawn } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { SfProject } from '@salesforce/core';
+import { ComponentSet, type MetadataComponent } from '@salesforce/source-deploy-retrieve';
 
 export type SelectedMetadata = {
   sourceDirs: string[];
@@ -26,48 +28,29 @@ type MetadataListComponent = {
   fullName?: string;
 };
 
-type SupportedMetadataType = {
-  metadataType: string;
-  localFullName: (path: string) => string | undefined;
+type MetadataTypesResult = {
+  result?: MetadataTypesPayload | MetadataTypeDescription[];
+};
+
+type MetadataTypesPayload = {
+  metadataObjects?: MetadataTypeDescription[];
+};
+
+type MetadataTypeDescription = {
+  xmlName?: string;
+  metadataType?: string;
+  name?: string;
+  type?: string;
+};
+
+type RavenPluginConfig = {
+  pullRemote?: {
+    metadataTypes?: string[];
+  };
 };
 
 const ignoredDirectoryNames = new Set(['.git', 'node_modules', '.sfdx', '.sf']);
-
-const supportedMetadataTypes: SupportedMetadataType[] = [
-  { metadataType: 'ApexClass', localFullName: (path) => getFileNameForPath(path, '/classes/', '.cls') },
-  { metadataType: 'ApexTrigger', localFullName: (path) => getFileNameForPath(path, '/triggers/', '.trigger') },
-  { metadataType: 'AuraDefinitionBundle', localFullName: (path) => getFolderNameForPath(path, '/aura/') },
-  { metadataType: 'LightningComponentBundle', localFullName: (path) => getFolderNameForPath(path, '/lwc/') },
-  { metadataType: 'Flow', localFullName: (path) => getFileNameForPath(path, '/flows/', '.flow-meta.xml') },
-  { metadataType: 'CustomObject', localFullName: (path) => getCustomObjectNameForPath(path) },
-  { metadataType: 'CustomField', localFullName: (path) => getObjectChildNameForPath(path, '/fields/', '.field-meta.xml') },
-  { metadataType: 'RecordType', localFullName: (path) => getObjectChildNameForPath(path, '/recordTypes/', '.recordType-meta.xml') },
-  {
-    metadataType: 'ValidationRule',
-    localFullName: (path) => getObjectChildNameForPath(path, '/validationRules/', '.validationRule-meta.xml'),
-  },
-  { metadataType: 'Layout', localFullName: (path) => getFileNameForPath(path, '/layouts/', '.layout-meta.xml') },
-  { metadataType: 'PermissionSet', localFullName: (path) => getFileNameForPath(path, '/permissionsets/', '.permissionset-meta.xml') },
-  { metadataType: 'Profile', localFullName: (path) => getFileNameForPath(path, '/profiles/', '.profile-meta.xml') },
-  { metadataType: 'CustomApplication', localFullName: (path) => getFileNameForPath(path, '/applications/', '.app-meta.xml') },
-  { metadataType: 'CustomTab', localFullName: (path) => getFileNameForPath(path, '/tabs/', '.tab-meta.xml') },
-  { metadataType: 'StaticResource', localFullName: (path) => getFileNameForPath(path, '/staticresources/', '.resource-meta.xml') },
-  { metadataType: 'CustomMetadata', localFullName: (path) => getFileNameForPath(path, '/customMetadata/', '.md-meta.xml') },
-  { metadataType: 'DuplicateRule', localFullName: (path) => getFileNameForPath(path, '/duplicateRules/', '.duplicateRule-meta.xml') },
-  { metadataType: 'FlexiPage', localFullName: (path) => getFileNameForPath(path, '/flexipages/', '.flexipage-meta.xml') },
-  { metadataType: 'GlobalValueSet', localFullName: (path) => getFileNameForPath(path, '/globalValueSets/', '.globalValueSet-meta.xml') },
-  { metadataType: 'Group', localFullName: (path) => getFileNameForPath(path, '/groups/', '.group-meta.xml') },
-  { metadataType: 'HomePageLayout', localFullName: (path) => getFileNameForPath(path, '/homePageLayouts/', '.homePageLayout-meta.xml') },
-  {
-    metadataType: 'PermissionSetGroup',
-    localFullName: (path) => getFileNameForPath(path, '/permissionSetGroups/', '.permissionsetgroup-meta.xml'),
-  },
-  { metadataType: 'Queue', localFullName: (path) => getFileNameForPath(path, '/queues/', '.queue-meta.xml') },
-  { metadataType: 'QuickAction', localFullName: (path) => getQuickActionNameForPath(path) },
-  { metadataType: 'Role', localFullName: (path) => getFileNameForPath(path, '/roles/', '.role-meta.xml') },
-  { metadataType: 'SharingRules', localFullName: (path) => getFileNameForPath(path, '/sharingRules/', '.sharingRules-meta.xml') },
-  { metadataType: 'StandardValueSet', localFullName: (path) => getFileNameForPath(path, '/standardValueSets/', '.standardValueSet-meta.xml') },
-];
+const pluginName = 'sf-raven';
 
 export const getExistingPackageDirectoryPaths = (projectRoot: string): string[] =>
   getPackageDirectoryPaths(projectRoot).filter((packageDirectoryPath) => existsSync(join(projectRoot, packageDirectoryPath)));
@@ -102,27 +85,71 @@ export const selectItems = async (items: string[]): Promise<string[]> => {
   return selectedItems;
 };
 
-export const getOrgOnlyMetadataNames = async (projectRoot: string, targetOrg?: string): Promise<string[]> => {
-  const localMetadataNames = getLocalMetadataNames(getMetadataPaths(projectRoot));
+export const getEffectiveRemoteMetadataTypes = async (projectRoot: string): Promise<string[]> => {
+  const configuredMetadataTypes = await getConfiguredRemoteMetadataTypes(projectRoot);
+
+  if (configuredMetadataTypes.length > 0) {
+    return configuredMetadataTypes;
+  }
+
+  return getLocalMetadataTypes(projectRoot);
+};
+
+export const addRemoteMetadataTypes = async (projectRoot: string, metadataTypes: string[]): Promise<string[]> => {
+  const existingMetadataTypes = await getEffectiveRemoteMetadataTypes(projectRoot);
+  const updatedMetadataTypes = sortValues([...existingMetadataTypes, ...metadataTypes]);
+  await writeRemoteMetadataTypes(projectRoot, updatedMetadataTypes);
+
+  return updatedMetadataTypes;
+};
+
+export const removeRemoteMetadataTypes = async (projectRoot: string, metadataTypes: string[]): Promise<string[]> => {
+  const metadataTypesToRemove = new Set(metadataTypes);
+  const updatedMetadataTypes = (await getEffectiveRemoteMetadataTypes(projectRoot)).filter((metadataType) => !metadataTypesToRemove.has(metadataType));
+  await writeRemoteMetadataTypes(projectRoot, updatedMetadataTypes);
+
+  return updatedMetadataTypes;
+};
+
+export const listOrgMetadataTypes = async (targetOrg?: string): Promise<string[]> => {
+  const args = ['org', 'list', 'metadata-types', '--json'];
+
+  if (targetOrg != null && targetOrg.length > 0) {
+    args.push('--target-org', targetOrg);
+  }
+
+  const result = await runSfCommand(args, {
+    stderr: 'pipe',
+  });
+
+  if (result.exitCode !== 0) {
+    return [];
+  }
+
+  const parsedResult = JSON.parse(result.stdout) as MetadataTypesResult;
+  const metadataTypes = Array.isArray(parsedResult.result) ? parsedResult.result : parsedResult.result?.metadataObjects ?? [];
+
+  return sortValues(metadataTypes.map(getMetadataTypeName).filter((metadataType): metadataType is string => metadataType != null));
+};
+
+export const getOrgOnlyMetadataNamesForType = async (
+  projectRoot: string,
+  metadataType: string,
+  targetOrg?: string
+): Promise<string[]> => {
+  const localMetadataNames = getLocalMetadataNames(projectRoot, metadataType);
   const orgMetadataNames = new Set<string>();
-  const metadataByType = await Promise.all(
-    supportedMetadataTypes.map(async (supportedMetadataType) => ({
-      metadataType: supportedMetadataType.metadataType,
-      components: await listOrgMetadata(supportedMetadataType.metadataType, targetOrg),
-    }))
-  );
+  const components = await listOrgMetadata(metadataType, targetOrg);
 
-  for (const metadataTypeResult of metadataByType) {
-    for (const component of metadataTypeResult.components) {
-      if (component.fullName == null || component.fullName.length === 0) {
-        continue;
-      }
+  for (const component of components) {
+    if (component.fullName == null || component.fullName.length === 0) {
+      continue;
+    }
 
-      const metadataName = formatMetadataName(metadataTypeResult.metadataType, component.fullName);
+    const metadataName = formatMetadataName(metadataType, component.fullName);
 
-      if (!localMetadataNames.has(metadataName)) {
-        orgMetadataNames.add(metadataName);
-      }
+    if (!localMetadataNames.has(metadataName)) {
+      orgMetadataNames.add(metadataName);
     }
   }
 
@@ -238,18 +265,71 @@ const runChildProcess = async (
     childProcess.stdin?.end();
   });
 
-const getLocalMetadataNames = (metadataPaths: string[]): Set<string> => {
+const getConfiguredRemoteMetadataTypes = async (projectRoot: string): Promise<string[]> => {
+  const project = await resolveProject(projectRoot);
+
+  if (project == null) {
+    return [];
+  }
+
+  const config = await getRavenPluginConfig(project);
+  const metadataTypes = config.pullRemote?.metadataTypes;
+
+  return Array.isArray(metadataTypes) ? sortValues(metadataTypes.filter((metadataType): metadataType is string => typeof metadataType === 'string')) : [];
+};
+
+const writeRemoteMetadataTypes = async (projectRoot: string, metadataTypes: string[]): Promise<void> => {
+  const project = await SfProject.resolve(projectRoot);
+  const config = await getRavenPluginConfig(project);
+
+  await project.setPluginConfiguration<RavenPluginConfig>(pluginName, {
+    ...config,
+    pullRemote: {
+      ...config.pullRemote,
+      metadataTypes: sortValues(metadataTypes),
+    },
+  });
+};
+
+const getRavenPluginConfig = async (project: SfProject): Promise<Readonly<RavenPluginConfig>> => {
+  try {
+    return await project.getPluginConfiguration<RavenPluginConfig>(pluginName);
+  } catch (error) {
+    if (isMissingPluginConfigError(error)) {
+      return {};
+    }
+
+    throw error;
+  }
+};
+
+const isMissingPluginConfigError = (error: unknown): boolean =>
+  error instanceof Error && (error.name === 'NoPluginsDefined' || error.name === 'PluginNotFound');
+
+const resolveProject = async (projectRoot: string): Promise<SfProject | undefined> => {
+  try {
+    return await SfProject.resolve(projectRoot);
+  } catch {
+    return undefined;
+  }
+};
+
+const getLocalMetadataTypes = (projectRoot: string): string[] => {
+  const metadataTypes = new Set<string>();
+
+  for (const component of getLocalMetadataComponents(projectRoot)) {
+    metadataTypes.add(component.type.name);
+  }
+
+  return sortValues(metadataTypes);
+};
+
+const getLocalMetadataNames = (projectRoot: string, metadataType: string): Set<string> => {
   const localMetadataNames = new Set<string>();
 
-  for (const metadataPath of metadataPaths) {
-    const normalizedPath = normalizePath(metadataPath);
-
-    for (const supportedMetadataType of supportedMetadataTypes) {
-      const fullName = supportedMetadataType.localFullName(normalizedPath);
-
-      if (fullName != null) {
-        localMetadataNames.add(formatMetadataName(supportedMetadataType.metadataType, fullName));
-      }
+  for (const component of getLocalMetadataComponents(projectRoot)) {
+    if (component.type.name === metadataType && component.fullName.length > 0) {
+      localMetadataNames.add(formatMetadataName(component.type.name, component.fullName));
     }
   }
 
@@ -258,53 +338,23 @@ const getLocalMetadataNames = (metadataPaths: string[]): Set<string> => {
 
 const formatMetadataName = (metadataType: string, fullName: string): string => `${metadataType}:${fullName}`;
 
-const normalizePath = (path: string): string => path.replace(/\\/g, '/');
+const getLocalMetadataComponents = (projectRoot: string): MetadataComponent[] => {
+  const sourcePaths = getExistingPackageDirectoryPaths(projectRoot).map((packageDirectoryPath) => join(projectRoot, packageDirectoryPath));
 
-const getFileNameForPath = (path: string, directory: string, suffix: string): string | undefined => {
-  if (!path.includes(directory) || !path.endsWith(suffix)) {
-    return undefined;
+  if (sourcePaths.length === 0) {
+    return [];
   }
 
-  return path.slice(path.lastIndexOf('/') + 1, -suffix.length);
+  return ComponentSet.fromSource(sourcePaths)
+    .toArray()
+    .filter((component) => component.type.isAddressable !== false);
 };
 
-const getFolderNameForPath = (path: string, directory: string): string | undefined => {
-  const directoryIndex = path.indexOf(directory);
+const getMetadataTypeName = (metadataType: MetadataTypeDescription): string | undefined =>
+  metadataType.xmlName ?? metadataType.metadataType ?? metadataType.name ?? metadataType.type;
 
-  if (directoryIndex === -1) {
-    return undefined;
-  }
-
-  const pathAfterDirectory = path.slice(directoryIndex + directory.length);
-  const folderName = pathAfterDirectory.split('/')[0];
-
-  return folderName.length > 0 ? folderName : undefined;
-};
-
-const getCustomObjectNameForPath = (path: string): string | undefined => {
-  const objectName = getFolderNameForPath(path, '/objects/');
-
-  if (objectName == null || !path.endsWith(`${objectName}.object-meta.xml`)) {
-    return undefined;
-  }
-
-  return objectName;
-};
-
-const getObjectChildNameForPath = (path: string, childDirectory: string, suffix: string): string | undefined => {
-  const objectName = getFolderNameForPath(path, '/objects/');
-  const childName = getFileNameForPath(path, childDirectory, suffix);
-
-  if (objectName == null || childName == null) {
-    return undefined;
-  }
-
-  return `${objectName}.${childName}`;
-};
-
-const getQuickActionNameForPath = (path: string): string | undefined =>
-  getObjectChildNameForPath(path, '/quickActions/', '.quickAction-meta.xml') ??
-  getFileNameForPath(path, '/quickActions/', '.quickAction-meta.xml');
+const sortValues = (values: Iterable<string>): string[] =>
+  Array.from(new Set(Array.from(values).filter((value) => value.length > 0))).sort((left, right) => left.localeCompare(right));
 
 const getPackageDirectoryPaths = (projectRoot: string): string[] => {
   const sfdxProjectPath = join(projectRoot, 'sfdx-project.json');

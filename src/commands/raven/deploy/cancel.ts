@@ -43,6 +43,9 @@ const cancelSelection = 'cancel' as const;
 
 type DeploySelection = DeployRequestRecord | typeof cancelSelection;
 type DeployChoice = Separator | { name: string; value: DeploySelection };
+type SelectPrompt = <Value>(config: { message: string; choices: readonly unknown[]; pageSize?: number }) => Promise<Value>;
+
+const selectPrompt = select as unknown as SelectPrompt;
 
 export default class DeployCancel extends SfCommand<DeployCancelResult> {
   public static readonly summary = messages.getMessage('summary');
@@ -165,7 +168,7 @@ const formatDeployRequest = (deployRequest: DeployRequestRecord): string => {
 
 const selectDeployRequest = async (deployRequests: DeployRequestRecord[]): Promise<DeploySelection | undefined> => {
   try {
-    return await select<DeploySelection>({
+    return await selectPrompt<DeploySelection>({
       message: messages.getMessage('prompt.selectDeploy'),
       choices: getDeployChoices(deployRequests),
       pageSize: 10,

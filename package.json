@@ -3,11 +3,12 @@
   "description": "A custom sf plugin built by @tomcarman",
   "version": "1.2.3",
   "dependencies": {
-    "@inquirer/select": "^2.4.2",
+    "@inquirer/select": "2.4.2",
     "@oclif/core": "^4.0.14",
     "@salesforce/core": "^8.2.3",
     "@salesforce/kit": "^3.1.6",
     "@salesforce/sf-plugins-core": "^11.3.12",
+    "@salesforce/source-deploy-retrieve": "^12.36.1",
     "@salesforce/ts-types": "^2.0.10",
     "dayjs": "^1.11.20",
     "jsforce": "^3.3.1",
@@ -103,6 +104,30 @@
             "subtopics": {
               "cancel": {
                 "description": "Cancel a pending or in-progress Salesforce deploy."
+              }
+            }
+          },
+          "pull": {
+            "description": "Commands relating to retrieving metadata.",
+            "subtopics": {
+              "remote": {
+                "description": "Commands relating to retrieving metadata that exists in the org but not locally.",
+                "subtopics": {
+                  "type": {
+                    "description": "Commands relating to remote pull metadata types.",
+                    "subtopics": {
+                      "add": {
+                        "description": "Add metadata types supported by remote pull."
+                      },
+                      "list": {
+                        "description": "List metadata types supported by remote pull."
+                      },
+                      "remove": {
+                        "description": "Remove metadata types supported by remote pull."
+                      }
+                    }
+                  }
+                }
               }
             }
           },

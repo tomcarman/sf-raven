@@ -1,0 +1,1 @@
+Use the following reference when developing Salesforce CLI plugins: https://github.com/salesforcecli/plugin-dev/blob/main/README.md
