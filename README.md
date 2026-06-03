@@ -18,6 +18,9 @@
   * [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
   * [sf raven pull](#sf-raven-pull)
   * [sf raven pull remote](#sf-raven-pull-remote)
+  * [sf raven pull remote type add](#sf-raven-pull-remote-type-add)
+  * [sf raven pull remote type list](#sf-raven-pull-remote-type-list)
+  * [sf raven pull remote type remove](#sf-raven-pull-remote-type-remove)
   * [sf raven deploy cancel](#sf-raven-deploy-cancel)
   * [sf raven query ids](#sf-raven-query-ids)
   * [sf raven audit display](#sf-raven-audit-display)
@@ -61,7 +64,13 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 - [sf raven pull](#sf-raven-pull)
   - Update Salesforce metadata into the local project via a fuzzy finder.
 - [sf raven pull remote](#sf-raven-pull-remote)
-  - Retrieve Salesforce metadata that exists in the org but not locally, via a fuzzy finder.
+  - Retrieve Salesforce metadata that exists in the org but not locally, by selecting a configured metadata type and then one or more remote components.
+- [sf raven pull remote type add](#sf-raven-pull-remote-type-add)
+  - Add metadata types to the remote pull configuration.
+- [sf raven pull remote type list](#sf-raven-pull-remote-type-list)
+  - List metadata types supported by remote pull.
+- [sf raven pull remote type remove](#sf-raven-pull-remote-type-remove)
+  - Remove metadata types from the remote pull configuration.
 
 <!-- #### sfdx:raven:utils
 * [sfdx raven:utils:deploy:branch2org](#sfdx-ravenutilsdeploybranch2org)
@@ -216,7 +225,7 @@ EXAMPLES
 
 ### sf raven pull remote
 
-Retrieve Salesforce metadata that exists in the org but not locally, via a fuzzy finder.
+Pull Salesforce metadata that exists in the org but not locally.
 
 ```
 USAGE
@@ -229,12 +238,71 @@ GLOBAL FLAGS
   --json  Format output as json.
 
 DESCRIPTION
-  List supported metadata components that exist in the target org but are not present in the local project. Org-only components are prefixed with a cloud marker in fzf. Press Tab to select multiple components, then Enter to retrieve them.
+  Select a configured metadata type, then list components of that type that exist in the target org but are not present in the local project. Org-only components are prefixed with a cloud marker in fzf. Press Tab to select multiple components, then Enter to retrieve them.
 
 EXAMPLES
   $ sf raven pull remote
 
   $ sf raven pull remote --target-org dev
+```
+
+### sf raven pull remote type add
+
+Add metadata types supported by remote pull.
+
+```
+USAGE
+  $ sf raven pull remote type add [--json] [-o <value>]
+
+FLAGS
+  -o, --target-org=<value>  Login username or alias for the target org. Uses the default org when omitted.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  List metadata types available in the target org and select one or more to add to this project's `sf raven pull remote` configuration. Press Tab to select multiple types in fzf, then Enter to save them.
+
+EXAMPLES
+  $ sf raven pull remote type add
+
+  $ sf raven pull remote type add --target-org dev
+```
+
+### sf raven pull remote type list
+
+List metadata types supported by remote pull.
+
+```
+USAGE
+  $ sf raven pull remote type list [--json]
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Display the metadata types that `sf raven pull remote` can inspect. If no project configuration has been saved yet, the list is derived from metadata types already present in the local project.
+
+EXAMPLES
+  $ sf raven pull remote type list
+```
+
+### sf raven pull remote type remove
+
+Remove metadata types supported by remote pull.
+
+```
+USAGE
+  $ sf raven pull remote type remove [--json]
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Select one or more metadata types to remove from this project's `sf raven pull remote` configuration. Press Tab to select multiple types in fzf, then Enter to save the updated list.
+
+EXAMPLES
+  $ sf raven pull remote type remove
 ```
 
 ### sf raven deploy cancel
