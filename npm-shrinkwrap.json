@@ -1,12 +1,12 @@
 {
   "name": "sf-raven",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "sf-raven",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "license": "BSD-3-Clause",
       "dependencies": {
         "@inquirer/select": "2.4.2",
