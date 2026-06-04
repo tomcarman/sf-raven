@@ -639,11 +639,10 @@ EXAMPLES
   $ sf raven apex log --target-org dev --filter MyDebugPrefix
 
   $ sf raven apex log --target-org dev --raw
-```
+
 
 OUTPUT
 
-```
 Trace flag active until 09:32:17.
 Tailing logs for tom.carman@myorg.com. Press Ctrl+C to stop.
 
