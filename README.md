@@ -80,7 +80,7 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
 **sf raven apex**
 
 - [sf raven apex log](#sf-raven-apex-log)
-  - Tail Apex debug logs in real time, streamed to your terminal.
+  - Tail Apex debug logs in real time, streamed to your terminal - a wrapper around the native `sf apex tail log` that makes it better.
 
 **sf raven pull**
 
@@ -599,7 +599,13 @@ OUTPUT
 
 ### sf raven apex log
 
-Tail Apex debug logs in real time.
+Tail Apex debug logs in real time, streamed to your terminal - a wrapper around the native `sf apex tail log` that makes it better.
+* Automatically manages trace flags for your user, or another user passed in (via `--user`)
+* By default strips the logs to only include USER_DEBUG and errors/exceptions (or full logs can be shown with `--raw` flag)
+* Logs are formatted to be more clean / readable
+* Ability to filter logs by an arbitrary value
+  * If you wanted to show only debug logs for a process you are actively debugging e.g. `System.debug('MyThing Account.Status: ' account.Status)`
+  * Then filter the logs with `--filter MyThing` 
 
 ```
 USAGE
