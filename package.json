@@ -92,6 +92,20 @@
               }
             }
           },
+          "inspect": {
+            "description": "Commands for inspecting and understanding org configuration.",
+            "subtopics": {
+              "automations": {
+                "description": "Show all automation that fires on a given sObject."
+              },
+              "dependencies": {
+                "description": "Show what a metadata component depends on and what depends on it."
+              },
+              "field": {
+                "description": "Find everywhere a field is referenced across the org's metadata."
+              }
+            }
+          },
           "apex": {
             "description": "Commands relating to Apex.",
             "subtopics": {
@@ -159,6 +173,9 @@
                   },
                   "recordtypes": {
                     "description": "Show Record Type information for a given sObject."
+                  },
+                  "validationrules": {
+                    "description": "Show Validation Rule information for a given sObject."
                   }
                 }
               }

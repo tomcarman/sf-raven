@@ -18,6 +18,14 @@ The API name of the sObject that you want to view fields for. Use a comma-delimi
 
 Path to write field information as CSV. When supplied, table output is suppressed.
 
+# flags.required.summary
+
+Only show fields that are required.
+
+# flags.type.summary
+
+Filter fields by type. Partial match, case-insensitive. Repeat the flag for multiple types (e.g. --type Lookup --type Formula).
+
 # info.csvWritten
 
 Wrote %s fields to %s.

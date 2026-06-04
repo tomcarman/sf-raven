@@ -29,6 +29,16 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
       summary: messages.getMessage('flags.csv.summary'),
       char: 'c',
     }),
+    required: Flags.boolean({
+      summary: messages.getMessage('flags.required.summary'),
+      char: 'r',
+      default: false,
+    }),
+    type: Flags.string({
+      summary: messages.getMessage('flags.type.summary'),
+      char: 't',
+      multiple: true,
+    }),
   };
 
   public async run(): Promise<ObjectDisplayFieldsResult> {
@@ -39,7 +49,7 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
     };
 
     type Record = {
-      [key: string]: string | object;
+      [key: string]: string | boolean | null | object;
       attributes: object;
       EntityDefinition: {
         QualifiedApiName: string;
@@ -47,6 +57,8 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
       Label: string;
       QualifiedApiName: string;
       DataType: string;
+      IsNillable: boolean;
+      Description: string | null;
     };
 
     const { flags } = await this.parse(ObjectDisplayFields);
@@ -55,7 +67,7 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
     const org = flags['target-org'];
     const conn = org.getConnection();
     const sobjects = parseSobjects(flags.sobject);
-    const records: Record[] = [];
+    let records: Record[] = [];
 
     this.spinner.start('Loading...');
 
@@ -63,12 +75,23 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
       await sobjects.reduce(async (previousQuery, sobject) => {
         await previousQuery;
 
-        const query = `SELECT EntityDefinition.QualifiedApiName, Label, QualifiedApiName, DataType FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = '${sobject}' ORDER BY QualifiedApiName`;
+        const query = `SELECT EntityDefinition.QualifiedApiName, Label, QualifiedApiName, DataType, IsNillable, Description FROM FieldDefinition WHERE EntityDefinition.QualifiedApiName = '${sobject}' ORDER BY QualifiedApiName`;
         const queryResult = (await conn.query(query)) as QueryResult;
         records.push(...queryResult.records);
       }, Promise.resolve());
     } finally {
       this.spinner.stop();
+    }
+
+    if (flags.required) {
+      records = records.filter((record) => !record.IsNillable);
+    }
+
+    if (flags.type != null && flags.type.length > 0) {
+      const typeFilters = flags.type.map((t) => t.toLowerCase());
+      records = records.filter((record) =>
+        typeFilters.some((typeFilter) => record.DataType.toLowerCase().includes(typeFilter))
+      );
     }
 
     const result: QueryResult = {
@@ -82,7 +105,6 @@ export default class ObjectDisplayFields extends SfCommand<ObjectDisplayFieldsRe
       writeCsv(flags.csv, result.records, includeObjectColumn);
       ux.log(messages.getMessage('info.csvWritten', [result.records.length.toString(), flags.csv]));
     } else {
-      // Return table of fields
       ux.table(result.records, getTableColumns(includeObjectColumn));
     }
 
@@ -105,17 +127,21 @@ const parseSobjects = (sobjectFlag: string): string[] => {
   return Array.from(new Set(sobjects));
 };
 
+type FieldRecord = {
+  EntityDefinition: { QualifiedApiName: string };
+  Label: string;
+  QualifiedApiName: string;
+  DataType: string;
+  IsNillable: boolean;
+  Description: string | null;
+};
+
 const getTableColumns = (
   includeObjectColumn: boolean
 ): {
   [key: string]: {
     header: string;
-    get: (row: {
-      EntityDefinition: { QualifiedApiName: string };
-      Label: string;
-      QualifiedApiName: string;
-      DataType: string;
-    }) => string;
+    get: (row: FieldRecord) => string;
   };
 } => ({
   ...(includeObjectColumn
@@ -138,27 +164,26 @@ const getTableColumns = (
     header: 'Type',
     get: (row) => row.DataType,
   },
+  isRequired: {
+    header: 'Required',
+    get: (row) => (!row.IsNillable ? '✓' : ''),
+  },
+  description: {
+    header: 'Description',
+    get: (row) => truncate(row.Description, 60),
+  },
 });
 
-const writeCsv = (
-  filePath: string,
-  records: Array<{
-    EntityDefinition: {
-      QualifiedApiName: string;
-    };
-    Label: string;
-    QualifiedApiName: string;
-    DataType: string;
-  }>,
-  includeObjectColumn: boolean
-): void => {
-  const columns = includeObjectColumn ? ['Object', 'Name', 'Developer Name', 'Type'] : ['Name', 'Developer Name', 'Type'];
+const writeCsv = (filePath: string, records: FieldRecord[], includeObjectColumn: boolean): void => {
+  const columns = includeObjectColumn
+    ? ['Object', 'Name', 'Developer Name', 'Type', 'Required', 'Description']
+    : ['Name', 'Developer Name', 'Type', 'Required', 'Description'];
   const rows = [
     columns.map(escapeCsvValue).join(','),
     ...records.map((record) =>
       (includeObjectColumn
-        ? [record.EntityDefinition.QualifiedApiName, record.Label, record.QualifiedApiName, record.DataType]
-        : [record.Label, record.QualifiedApiName, record.DataType]
+        ? [record.EntityDefinition.QualifiedApiName, record.Label, record.QualifiedApiName, record.DataType, record.IsNillable ? 'false' : 'true', record.Description ?? '']
+        : [record.Label, record.QualifiedApiName, record.DataType, record.IsNillable ? 'false' : 'true', record.Description ?? '']
       )
         .map(escapeCsvValue)
         .join(',')
@@ -166,6 +191,11 @@ const writeCsv = (
   ];
 
   writeFileSync(filePath, `${rows.join('\n')}\n`, 'utf8');
+};
+
+const truncate = (value: string | null, maxLength: number): string => {
+  if (value == null) return '';
+  return value.length > maxLength ? `${value.slice(0, maxLength)}…` : value;
 };
 
 const escapeCsvValue = (value: unknown): string => {

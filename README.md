@@ -17,6 +17,9 @@
 * [Command Reference](#command-reference)
   * [sf raven object display fields](#sf-raven-object-display-fields)
   * [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
+  * [sf raven inspect automations](#sf-raven-inspect-automations)
+  * [sf raven inspect dependencies](#sf-raven-inspect-dependencies)
+  * [sf raven inspect field](#sf-raven-inspect-field)
   * [sf raven pull](#sf-raven-pull)
   * [sf raven pull remote](#sf-raven-pull-remote)
   * [sf raven pull remote type add](#sf-raven-pull-remote-type-add)
@@ -44,6 +47,15 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
   - Show field information for a given sObject.
 - [sf raven object display recordtypes](#sf-raven-object-display-recordtypes)
   - Show RecordType information for a given sObject.
+
+**sf raven inspect**
+
+- [sf raven inspect automations](#sf-raven-inspect-automations)
+  - Show all automation that fires on a given sObject.
+- [sf raven inspect dependencies](#sf-raven-inspect-dependencies)
+  - Show what a metadata component depends on and what depends on it.
+- [sf raven inspect field](#sf-raven-inspect-field)
+  - Find everywhere a field is referenced across the org's metadata.
 
 **sf raven audit display**
 
@@ -82,14 +94,6 @@ Full details, usage, examples etc are further down, or can be accessed via `--he
   - List metadata types supported by remote pull.
 - [sf raven pull remote type remove](#sf-raven-pull-remote-type-remove)
   - Remove metadata types from the remote pull configuration.
-
-<!-- #### sfdx:raven:utils
-* [sfdx raven:utils:deploy:branch2org](#sfdx-ravenutilsdeploybranch2org)
-  * Deploy a git branch to an org
-* [sfdx raven:utils:diff](#sfdx-ravenutilsdiff)
-  * Diff individual metadata items (class, object etc) between orgs
-* [sfdx raven:utils:dashboarduser:update](#sfdx-ravenutilsdashboarduserupdate)
-  * Change the running user of Dashboards -->
 
 ## Install
 
@@ -203,6 +207,140 @@ Name                Developer Name          Id
 Business Account    Business_Account        0124J000000XXXXABC
 Person Account      PersonAccount           0124J000000YYYYDEF
 ...
+```
+
+### sf raven inspect automations
+
+Show all automation that fires on a given sObject.
+
+```
+USAGE
+  $ sf raven inspect automations -o <value> -s <value> [--json] [-a]
+
+FLAGS
+  -a, --all                 Include inactive automation. Active items display normally, inactive items are dimmed with an Active indicator.
+  -o, --target-org=<value>  (required) Login username or alias for the target org.
+  -s, --sobject=<value>     (required) The API name of the sObject to inspect.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Displays Apex Triggers, record-triggered Flows, Workflow Rules, and Process Builder processes that are configured on the given sObject, grouped by execution phase.
+
+  By default only active automation is shown. Use --all to include inactive items.
+
+EXAMPLES
+  $ sf raven inspect automations --target-org dev --sobject Account
+
+  $ sf raven inspect automations --target-org dev --sobject Account --all
+
+  $ sf raven inspect automations --target-org dev --sobject Opportunity
+
+
+OUTPUT
+
+Automation on Account (3)
+
+Phase           Type          Name                        Events          Order
+─────────────── ───────────── ─────────────────────────── ─────────────── ─────
+Before Save     Flow          Account Before Save         Insert, Update  1
+After Trigger   Apex Trigger  AccountTrigger              Insert, Update
+Post-Save       Workflow Rule Notify Account Owner        Insert, Update
+```
+
+### sf raven inspect dependencies
+
+Show what a metadata component depends on and what depends on it.
+
+```
+USAGE
+  $ sf raven inspect dependencies -o <value> -t <value> -n <value> [--json]
+
+FLAGS
+  -n, --name=<value>        (required) The API name of the component. For CustomField use ObjectName.FieldName format.
+  -o, --target-org=<value>  (required) Login username or alias for the target org.
+  -t, --type=<value>        (required) The metadata type of the component (e.g. ApexClass, Flow, CustomObject, CustomField).
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Queries the MetadataComponentDependency API to show outbound dependencies (what this component uses) and inbound references (what uses this component).
+
+  Supported types: ApexClass, ApexTrigger, Flow, CustomObject, CustomField, LightningComponentBundle, AuraDefinitionBundle.
+
+  For CustomField, provide the name as ObjectApiName.FieldApiName (e.g. Account.MyField__c).
+
+EXAMPLES
+  $ sf raven inspect dependencies --target-org dev --type ApexClass --name AccountService
+
+  $ sf raven inspect dependencies --target-org dev --type Flow --name Sync_Account_to_ERP
+
+  $ sf raven inspect dependencies --target-org dev --type CustomObject --name Account
+
+  $ sf raven inspect dependencies --target-org dev --type CustomField --name Account.MyField__c
+
+
+OUTPUT
+
+Dependencies for ApexClass: ServicesService
+
+Depends on (3)
+Type           Name
+─────────────  ─────────────────────────────────
+CustomField    Service__c.Status__c
+CustomObject   Service
+ApexClass      DmlOps
+
+Referenced by (2)
+Type       Name
+─────────  ─────────────────────────────────────────
+ApexClass  ServicesServiceTest
+Flow       Opportunity_Update_Create_Service_Records
+```
+
+### sf raven inspect field
+
+Find everywhere a field is referenced across the org's metadata.
+
+```
+USAGE
+  $ sf raven inspect field -o <value> -s <value> -f <value> [--json] [--deep]
+
+FLAGS
+      --deep                Retrieve FlexiPages, Layouts, and Flows and text-search them for references. Slower, but catches declarative references the dependency API misses, and works for standard fields.
+  -f, --field=<value>       (required) The API name of the field to inspect.
+  -o, --target-org=<value>  (required) Login username or alias for the target org.
+  -s, --sobject=<value>     (required) The API name of the sObject the field belongs to.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  Queries the MetadataComponentDependency API to find Apex classes, triggers, Flows, and other metadata that references the given custom field.
+
+  For full coverage, use --deep. This retrieves FlexiPages, Layouts, and Flows via the Metadata API and text-searches their source, catching declarative references the dependency API does not track (including references to standard fields). The --deep retrieve is slower (typically 15-60s, longer on large orgs).
+
+  Standard fields (e.g. Name, CreatedDate) can only be inspected with --deep, as the dependency API does not track them.
+
+EXAMPLES
+  $ sf raven inspect field --target-org dev --sobject Account --field MyCustomField__c
+
+  $ sf raven inspect field --target-org dev --sobject Account --field MyCustomField__c --deep
+
+  $ sf raven inspect field --target-org dev --sobject Account --field AnnualRevenue --deep
+
+
+OUTPUT
+
+References to Account.MyCustomField__c (3 found)
+
+Type       Name                 Source
+─────────  ───────────────────  ──────────
+ApexClass  AccountService       dependency
+Flow       Sync_Account_to_ERP  dependency
+Layout     Account Layout       deep
 ```
 
 ### sf raven pull
@@ -511,159 +649,3 @@ Tailing logs for tom.carman@myorg.com. Press Ctrl+C to stop.
   [12]  DEBUG    entering trigger
   ⚠  [47]  System.NullPointerException: Attempt to de-reference a null object
 ```
-
-<!-- ### sfdx raven:utils:deploy:branch2org
-
-Deploys a git branch to an org. Assumes you have git installed the neccessary access to the repo you are trying to clone (eg. you can run `git clone ...`), and that the branch is in a source-format sfdx project structure.
-
-```
-USAGE
-  $ sfdx raven:utils:deploy:branch2org
-
-OPTIONS
-  -u, --targetusername
-      (required) sets a username or alias for the target org that you wish to deploy to. overrides the default target org.
-
-  -r, --repository
-      (required) URL of the repo. It can either be an HTTPs URL (eg. 'https://github.com/user/some-repo.git') and you
-      will be prompted to enter a username and password, or an SSH URL (eg. 'git@github.com:user/some-repo.git')
-      which assumes you have SSH keys configured for this repo.
-
-  -b, --branch
-      (required) the branch you wish to deploy
-
-  -c, --checkonly
-      (optional) Validates the deployed metadata and runs all Apex tests, but prevents the
-      deployment from being saved to the org.
-
-  -h, --help
-      show CLI help
-
-  --json
-      format output as json
-
-  --loglevel              l
-      ogging level for this command invocation
-
-EXAMPLE
-  $ sfdx raven:utils:deploy:branch2org -r git@github.com:user/some-repo.git -b branchName -u orgName`
-  or
-  $ sfdx raven:utils:deploy:branch2org -r https://github.com/user/some-repo.git -b branchName -u orgName`
-
-
-OUTPUT
-
-❯ Cloning repo & checking out 'branchName'... done
-❯ Converting from source format to metadata format... done
-❯ Initiating deployment... done
-
-❯ The deployment has been requested with id: 0Af4K00000BHVuAXXX
-
-❯ Deployment InProgress (0/31) Processing Type: CustomObject
-❯ Deployment InProgress (21/31) Processing Type: CustomTab
-❯ Deployment InProgress (30/31) Processing Type: Profile
-❯ Deployment Succeeded
-
-❯ Link to deployment page in Salesforce:
-https://wise-hawk-22uzds-dev-ed.my.salesforce.com/lightning/setup/DeployStatus/page?address=%2Fchangemgmt%2FmonitorDeploymentsDetails.apexp%3FasyncId%3D0Af4K00000BHVuASAX
-```
-
-### sfdx raven:utils:diff
-
-Allows you to quickly compare metadata of files between two orgs. Intended to be used for quick compares of single
-(or possibly a few) files of the same metadata type, rather than a full org compare (there are better tools for
-that) The results are stored in a diff_{timestamp}.html file wherever you run the command from, and automatically
-opened in a browser.
-
-```
-USAGE
-  $ sfdx raven:utils:diff -s <string> -t <string> -o <string> -i <string> [--filename <string>] [-f <string>]
-  [--silent] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
-
-OPTIONS
-  -f, --format=format
-      (optional) Format of the diff. Options are 'line' (inline diff) or 'side' (side-by-side diff). Defaults to 'line'
-
-  -i, --items=items
-      (required) The items you wish to compare eg. MyCoolClass or Account. Can be multiple items comma delimted eg.
-      MyClass,MyController or Account,Opportunity (but can only be of one 'type')
-
-  -o, --type=type
-      (required) The type of metadata you want to compare eg. ApexClass or CustomObject
-
-  -s, --source=source
-      (required) Alias / Username of the org you want to use as the SOURCE of the diff eg. projectDev
-
-  -t, --target=target
-      (required) Alias / Username of the org you want to use as the TARGET of the diff eg. projectQA
-
-  --filename=filename
-      (optional) The filename of the diff.html. Defaults to diff_{timestamp}.html
-
-  --json
-      format output as json
-
-  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)
-      [default: warn] logging level for this command invocation
-
-  --silent
-      use this to not auto open browser with results
-
-EXAMPLES
-  $ sfdx raven:utils:diff --source dev_org --target qa_org --type CustomObject --items Account
-  $ sfdx raven:utils:diff --source dev_org --target qa_org --type CustomObject --items 'Account,Opportunity'
-  $ sfdx raven:utils:diff --source dev_org --target qa_org --type ApexClass --items MyClass
-  $ sfdx raven:utils:diff --source dev_org --target qa_org --type ApexClass --items 'MyClass,MyTestClass,MyController
-  $ sfdx  raven:utils:diff -s dev_org -t qa_org -o CustomObject -i 'Account'
-  $ sfdx  raven:utils:diff -s dev_org -t qa_org -o ApexClass -i 'MyClass'
-  $ sfdx  raven:utils:diff -s dev_org -t qa_org -o ApexClass -i 'MyClass' --silent
-
-OUTPUT
-
-❯ sfdx raven:utils:diff --source trailhead --target dev --type ApexClass --items 'HelloWorld'
-🗂️  Building package.xml... done
-⏬ Retrieving from trailhead... done
-⏬ Retrieving from dev... done
-📂 Unzipping metadata... done
-👨‍🍳 Preparing diff... done
-✨ Cleaning up... done
-🌐 Opening with diff2html in browser... done
-```
-<img width="795" alt="diff" src="https://user-images.githubusercontent.com/1554713/111902572-057edf80-8a36-11eb-8c45-56c09c290e89.png">
-
-
-### sfdx raven:utils:dashboarduser:update
-
-Updates the "Running User" of Dashboards from a given user, to an alternate given user. Useful for mass-updating Dashboards when a user is deactivated.
-
-You will have the following additional options when running -
-
-* A list of Dashboards that will be affected as part of the script will be displayed, with the option to abort if desired.
-* The final step to deploy the changes back to the org can be skipped when prompted, allowing for the manual deploy of the patched metadata files - this might be desirable when running against Production environments with strict deployment practices, or if you maintain Dashboard metadata in source control and want to commit the files.
-
-```
-USAGE
-  $ sfdx raven:utils:dashboarduser:update
-
-OPTIONS
-  -u, --targetusername
-      (required) sets a username or alias for the target org. overrides the default target org.
-
-  -f, --from
-      (required) the username of the user which is currently the 'running user' of the Dashboards eg. 'tom.carman@ecorp.com'
-
-  -t, --to.
-      (required) the username of the user which you want to make the new 'running user' of the Dashboards eg. 'james.moriarty@ecorp.com'
-
-  -h, --help
-      show CLI help
-
-  --json
-      format output as json
-
-  --loglevel
-      logging level for this command invocation
-
-EXAMPLE
-  $ sfdx raven:utils:dashboarduser:update -u ecorp-dev --from tom.carman@ecorp.com --to james.moriarty@ecorp.com`
-``` -->
