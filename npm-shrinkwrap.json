@@ -33,7 +33,7 @@
         "@types/node": "^20.19.41",
         "eslint-plugin-sf-plugin": "^1.20.33",
         "husky": "^9.1.1",
-        "oclif": "^4.23.7",
+        "oclif": "^4.23.10",
         "shx": "0.4.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3",
@@ -3037,9 +3037,9 @@
       }
     },
     "node_modules/@oclif/core": {
-      "version": "4.11.3",
-      "resolved": "https://registry.npmjs.org/@oclif/core/-/core-4.11.3.tgz",
-      "integrity": "sha512-gQCSYAtUhJilGKaSaZhqejH9X1dDu+jWQjLmtGOgN/XcKaAEPPSeT2mu1UvlvtPox1/NNRdlBcUa8KRKo2HnJQ==",
+      "version": "4.11.4",
+      "resolved": "https://registry.npmjs.org/@oclif/core/-/core-4.11.4.tgz",
+      "integrity": "sha512-URwiQ5ALx/sJ2iH4vzXEd+H4K6NAI7LRs6Jag3hrgKEpGmaE6alfRC8qjO4GIgb6A3ACaJumqP9twi/M9ywdHQ==",
       "license": "MIT",
       "dependencies": {
         "ansi-escapes": "^4.3.2",
@@ -3053,7 +3053,7 @@
         "is-wsl": "^2.2.0",
         "lilconfig": "^3.1.3",
         "minimatch": "^10.2.5",
-        "semver": "^7.8.0",
+        "semver": "^7.8.1",
         "string-width": "^4.2.3",
         "supports-color": "^8",
         "tinyglobby": "^0.2.16",
@@ -11227,21 +11227,21 @@
       }
     },
     "node_modules/oclif": {
-      "version": "4.23.7",
-      "resolved": "https://registry.npmjs.org/oclif/-/oclif-4.23.7.tgz",
-      "integrity": "sha512-rog7/P6l6PXe7O3zWMcKB4prQm35z6NyDfpED6B3UwnPr1Fy+KWdcBHSr6Er3AjmvYsP5wsJwwPEsxUfvMNsyg==",
+      "version": "4.23.10",
+      "resolved": "https://registry.npmjs.org/oclif/-/oclif-4.23.10.tgz",
+      "integrity": "sha512-foZYNmCjgFo0HJzbfY9oz8IgNs4aCPVbe51gnauM646mOy+C9WzoQS5iJyCzRiuJvS4fFrONG0BrjWiCFjtlGQ==",
       "dev": true,
       "license": "MIT",
       "dependencies": {
         "@aws-sdk/client-cloudfront": "^3.1009.0",
-        "@aws-sdk/client-s3": "^3.1048.0",
+        "@aws-sdk/client-s3": "^3.1053.0",
         "@inquirer/confirm": "^3.1.22",
         "@inquirer/input": "^2.2.4",
         "@inquirer/select": "^2.5.0",
-        "@oclif/core": "^4.11.2",
+        "@oclif/core": "^4.11.4",
         "@oclif/plugin-help": "^6.2.49",
         "@oclif/plugin-not-found": "^3.2.85",
-        "@oclif/plugin-warn-if-update-available": "^3.1.57",
+        "@oclif/plugin-warn-if-update-available": "^3.1.65",
         "ansis": "^3.16.0",
         "async-retry": "^1.3.3",
         "change-case": "^4",
@@ -14677,14 +14677,27 @@
         "node": ">=18.0.0"
       }
     },
+    "node_modules/wireit/node_modules/balanced-match": {
+      "version": "4.0.4",
+      "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-4.0.4.tgz",
+      "integrity": "sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==",
+      "dev": true,
+      "license": "MIT",
+      "engines": {
+        "node": "18 || 20 || >=22"
+      }
+    },
     "node_modules/wireit/node_modules/brace-expansion": {
-      "version": "2.0.1",
-      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-2.0.1.tgz",
-      "integrity": "sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==",
+      "version": "5.0.6",
+      "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.6.tgz",
+      "integrity": "sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==",
       "dev": true,
       "license": "MIT",
       "dependencies": {
-        "balanced-match": "^1.0.0"
+        "balanced-match": "^4.0.2"
+      },
+      "engines": {
+        "node": "18 || 20 || >=22"
       }
     },
     "node_modules/word-wrap": {
